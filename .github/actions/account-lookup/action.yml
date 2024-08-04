@@ -20,7 +20,7 @@ runs:
     - name: List-Org-Accounts
       id: lookup-account-id
       run: |
-        ACCOUNT_ID=$(aws organizations list-accounts --query "[Accounts?Name == '${{ inputs.account }}'].Id | [0]" --output text | xargs)
+        ACCOUNT_ID=$(aws organizations list-accounts --query "Accounts[?Name == '${{ inputs.account }}'].Id | [0]" --output text | xargs)
         echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Assert-Account-ID-Present

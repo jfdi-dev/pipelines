@@ -26,13 +26,13 @@ runs:
     # Find the account id of the `account` parameter, which is a name.
     - name: Lookup-Account-ID-From-Name
       id: lookup-account-id
-      uses: jaskwa/pipelines/.github/actions/account-lookup.yml@main
+      uses: jaskwa/pipelines/.github/actions/account-lookup@main
       with:
         account: ${{ inputs.account }}
     # With the Account ID and a Role Name, we can format a Role ARN
     - name: Format-Role-Arn
       id: format-role-arn
-      uses: jaskwa/pipelines/.github/actions/role-format.yml@main
+      uses: jaskwa/pipelines/.github/actions/role-format@main
       with:
         account-id: ${{ steps.lookup-account-id.outputs.account-id }}
         role-name: ${{ inputs.deployment-role }}

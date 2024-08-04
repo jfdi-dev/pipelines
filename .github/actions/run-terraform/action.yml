@@ -19,7 +19,6 @@ runs:
   steps:
     - name: Setup-Terraform
       uses: hashicorp/setup-terraform@v1
-      working-directory: ${{ inputs.dir }}
       with:
         terraform_version: 1.9.3
     - name: Terraform-Init

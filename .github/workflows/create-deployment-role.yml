@@ -2,7 +2,7 @@ name: Create Deployment Role
 on:
   workflow_call:
     inputs:
-      aws-region:
+      region:
         required: true
         type: string
       account:
@@ -15,7 +15,7 @@ on:
         required: true
         type: string
     secrets:
-      aws-ci-role-arn:
+      ci-role-arn:
         required: true
 
 jobs:
@@ -27,8 +27,8 @@ jobs:
       - name: On-AWS
         uses: jaskwa/pipelines/.github/actions/on-aws.yml@main
         with:
-          aws-region: ${{ inputs.aws-region }}
-          aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          region: ${{ inputs.region }}
+          ci-role-arn: ${{ secrets.ci-role-arn }}
           account: ${{ inputs.account }}
           deployment-role: ${{ inputs.project }}-iam-roles-deployer
       - name: Run-Terraform

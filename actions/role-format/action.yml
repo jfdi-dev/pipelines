@@ -1,0 +1,19 @@
+name: "Format Role ARN"
+description: "Format the full AWS ARN of an IAM Role, given the Account ID and Role Name."
+inputs:
+  account-id:
+    description: "The ID of the AWS Account that the Role is in."
+    required: true
+  role-name:
+    description: "The Name of the Role."
+outputs:
+  role-arn:
+    description: "The ARN of the Role."
+    value: ${{ steps.format-arn.outputs.role-arn }}
+runs:
+  using: composite
+  steps:
+    - name: Format-ARN
+      id: format-arn
+      run: echo "role-arn=arn:aws:iam::${{ inputs.account-id }}:role/${{ inputs.role-name }}" >> $GITHUB_OUTPUT
+      shell: bash

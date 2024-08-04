@@ -1,0 +1,39 @@
+name: Create Deployment Role
+on:
+  workflow_call:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+      account:
+        required: true
+        type: string
+      project:
+        required: true
+        type: string
+      artifact:
+        required: true
+        type: string
+    secrets:
+      aws-ci-role-arn:
+        required: true
+
+jobs:
+  AWS-SSO:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git-Clone
+        uses: actions/checkout@v4
+      - name: On-AWS
+        uses: jaskwa/pipelines/.github/actions/on-aws
+        with:
+          aws-region: ${{ inputs.aws-region }}
+          aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          account: ${{ inputs.account }}
+          deployment-role: ${{ inputs.project }}-iam-roles-deployer
+      - name: Run-Terraform
+        uses: jaskwa/pipelines/.github/actions/run-terraform
+        with:
+          project: ${{ inputs.project }}
+          account: ${{ inputs.account }}
+          state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment.roles

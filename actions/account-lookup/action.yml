@@ -1,0 +1,25 @@
+name: "Lookup Account ID from Name"
+description: "Given a friendly name for an organizational account, finds it's corresponding account id."
+inputs:
+  account:
+    description: "The name of the AWS Account we want the ID for."
+    required: true
+outputs:
+  account-id:
+    description: "The ID of the AWS Account that corresponds to the account name input"
+    value: ${{ steps.lookup-account-id.outputs.account-id }}
+runs:
+  using: composite
+  steps:
+    - name: List-Org-Accounts
+      id: lookup-account-id
+      uses: ItsKarma/aws-cli@v1.70.0
+      with:
+        args: |
+          ACCOUNT_ID=$(aws organizations list-accounts --query "[Accounts?Name == '${{ inputs.account }}'].Id | [0]" --output text | xargs)
+          echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
+    - name: Assert-Account-ID-Present
+      if: ${{ steps.lookup-account-id.outputs.account-id }} == ''
+      run: |
+        echo "Could not find Account ID from Account Name: '${{ inputs.account }}'"; exit 1;
+      shell: bash

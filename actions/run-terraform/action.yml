@@ -1,0 +1,34 @@
+name: "Run Terraform"
+description: "Setup Terraform for pipeline use, tf init, tf apply"
+inputs:
+  project:
+    description: "The name of the project."
+    required: true
+  account:
+    description: "The name of the account."
+    required: true
+  state-key:
+    description: "The key against which Terraform state will be stored."
+    required: true
+  dir:
+    description: "The directory which contains the Terraform module for creating deployment roles."
+    required: false
+    default: deployment-roles/
+runs:
+  using: "composite"
+  steps:
+    - name: Setup-Terraform
+      uses: hashicorp/setup-terraform@v1
+      working-directory: ${{ inputs.dir }}
+      with:
+        terraform_version: 1.9.3
+    - name: Terraform-Init
+      working-directory: ${{ inputs.dir }}
+      run: |
+        terraform init -backend-config='bucket=state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='dynamodb-table=lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='key=${{ inputs.state-key }}'
+      shell: bash
+    - name: Terraform-Apply
+      working-directory: ${{ inputs.dir }}
+      run: |
+        terraform apply
+      shell: bash

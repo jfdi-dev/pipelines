@@ -1,7 +1,7 @@
 name: "On AWS"
 description: "Initializes GitHub OIDC and STS AssumeRole"
 inputs:
-  aws-region:
+  region:
     description: "The AWS Region to deploy into."
     required: true
   aws-ci-role-arn:
@@ -21,7 +21,7 @@ runs:
       with:
         role-to-assume: ${{ inputs.aws-ci-role-arn }}
         role-session-name: CI-GitHub-Action
-        aws-region: ${{ inputs.aws-region }}
+        aws-region: ${{ inputs.region }}
     # Now we are authenticated into that role.
     # Find the account id of the `account` parameter, which is a name.
     - name: Lookup-Account-ID-From-Name

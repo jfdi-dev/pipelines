@@ -25,14 +25,14 @@ jobs:
       - name: Git-Clone
         uses: actions/checkout@v4
       - name: On-AWS
-        uses: jaskwa/pipelines/.github/actions/on-aws@main
+        uses: jaskwa/pipelines/.github/actions/on-aws.yml@main
         with:
           aws-region: ${{ inputs.aws-region }}
           aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
           account: ${{ inputs.account }}
           deployment-role: ${{ inputs.project }}-iam-roles-deployer
       - name: Run-Terraform
-        uses: jaskwa/pipelines/.github/actions/run-terraform@main
+        uses: jaskwa/pipelines/.github/actions/run-terraform.yml@main
         with:
           project: ${{ inputs.project }}
           account: ${{ inputs.account }}

@@ -4,7 +4,7 @@ inputs:
   region:
     description: "The AWS Region to deploy into."
     required: true
-  aws-ci-role-arn:
+  ci-role-arn:
     description: "The IAM Role ARN which supports GitHub OIDC."
     required: true
   account:
@@ -15,11 +15,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # SSO into the AWS role & account assigned by the `aws-ci-role-arn` parameter.
+    # SSO into the AWS role & account assigned by the `ci-role-arn` parameter.
     - name: AWS-GitHub-OIDC
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ inputs.aws-ci-role-arn }}
+        role-to-assume: ${{ inputs.ci-role-arn }}
         role-session-name: CI-GitHub-Action
         aws-region: ${{ inputs.region }}
     # Now we are authenticated into that role.
@@ -40,7 +40,7 @@ runs:
     - name: AWS-Assume-Role
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-region: ${{ inputs.aws-region }}
+        aws-region: ${{ inputs.region }}
         role-to-assume: ${{ steps.format-role-arn.outputs.role-arn }}
         role-skip-session-tagging: true
         role-chaining: true

@@ -11,13 +11,18 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Apt-Install-AWS-CLI
+      run: |
+        sudo apt-get install awscli
+        aws --version
+        aws sts get-caller-identity
+      shell: bash
     - name: List-Org-Accounts
       id: lookup-account-id
-      uses: ItsKarma/aws-cli@v1.70.0
-      with:
-        args: |
-          ACCOUNT_ID=$(aws organizations list-accounts --query "[Accounts?Name == '${{ inputs.account }}'].Id | [0]" --output text | xargs)
-          echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
+      run: |
+        ACCOUNT_ID=$(aws organizations list-accounts --query "[Accounts?Name == '${{ inputs.account }}'].Id | [0]" --output text | xargs)
+        echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
+      shell: bash
     - name: Assert-Account-ID-Present
       if: ${{ steps.lookup-account-id.outputs.account-id }} == ''
       run: |

@@ -21,10 +21,11 @@ runs:
       id: lookup-account-id
       run: |
         ACCOUNT_ID=$(aws organizations list-accounts --query "Accounts[?Name == '${{ inputs.account }}'].Id | [0]" --output text)
+        echo "account-id=${ACCOUNT_ID}"
         echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Assert-Account-ID-Present
       if: ${{ steps.lookup-account-id.outputs.account-id }} == ''
       run: |
-        echo "Could not find Account ID from Account Name: '${{ inputs.account }}'"; exit 1;
+        echo "Could not find Account ID from Account Name: '${{ inputs.account }}' (got: ${{ steps.lookup-account-id.outputs.account-id }})"; exit 1;
       shell: bash

@@ -29,5 +29,5 @@ runs:
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}
       run: |
-        terraform apply -input=false -auto-approve
+        terraform apply -input=false -auto-approve -lock=false
       shell: bash

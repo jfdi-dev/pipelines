@@ -30,7 +30,7 @@ jobs:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.ci-role-arn }}
           account: ${{ inputs.account }}
-          deployment-role: ${{ inputs.project }}-iam-roles-deployer
+          deployment-role: ${{ inputs.project }}-iam-deployer
       - name: Run-Terraform
         uses: jaskwa/pipelines/.github/actions/run-terraform@main
         with:

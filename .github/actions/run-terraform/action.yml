@@ -24,7 +24,7 @@ runs:
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}
       run: |
-        terraform init -backend-config='bucket=state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='dynamodb-table=lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='key=${{ inputs.state-key }}'
+        terraform init -backend-config='bucket=state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='dynamodb_table=lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='key=${{ inputs.state-key }}'
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

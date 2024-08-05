@@ -25,7 +25,7 @@ runs:
         echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Assert-Account-ID-Present
-      if: ${{ steps.lookup-account-id.outputs.account-id }} == ''
+      if: ${{ steps.lookup-account-id.outputs.account-id == '' }}
       run: |
         echo "Could not find Account ID from Account Name: '${{ inputs.account }}' (got: ${{ steps.lookup-account-id.outputs.account-id }})"; exit 1;
       shell: bash

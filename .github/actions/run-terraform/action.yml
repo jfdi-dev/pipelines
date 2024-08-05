@@ -1,6 +1,12 @@
 name: "Run Terraform"
 description: "Setup Terraform for pipeline use, tf init, tf apply"
 inputs:
+  region:
+    description: "The region to deploy into"
+    required: true
+  tooling-account:
+    description: "The id of the tooling account"
+    required: true
   project:
     description: "The name of the project."
     required: true
@@ -21,10 +27,25 @@ runs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.9.3
+    - name: Create-Backend-Config
+      working-directory: ${{ inputs.dir }}
+      run: |
+        echo 'bucket="state.terraform.${{ inputs.account }}.${{ inputs.project }}"' >> ./config.s3.tfbackend
+        echo 'dynamodb_table="lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ inputs.state-key }}"' >> ./config.s3.tfbackend
+      shell: bash
+    - name: Create-Context-Config
+      working-directory: ${{ inputs.dir }}
+      run: |
+        echo 'region="${{ inputs.region }}"' >> ./context.auto.tfvars
+        echo 'account="${{ inputs.account }}"' >> ./context.auto.tfvars
+        echo 'project=${{ inputs.project }}"' >> ./context.auto.tfvars
+        echo 'tooling-account="${{ inputs.tooling-account }}"' >> context.auto.tfvars
+      shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}
       run: |
-        terraform init -input=false -backend-config='bucket=state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='dynamodb_table=lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}' -backend-config='key=${{ inputs.state-key }}'
+        terraform init -input=false -backend-config=./config.s3.tfbackend
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

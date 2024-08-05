@@ -17,6 +17,8 @@ on:
     secrets:
       ci-role-arn:
         required: true
+      tooling-account:
+        required: true
 
 jobs:
   AWS-SSO:
@@ -34,6 +36,8 @@ jobs:
       - name: Run-Terraform
         uses: jaskwa/pipelines/.github/actions/run-terraform@main
         with:
+          region: ${{ inputs.region }}
+          tooling-account: ${{ secrets.tooling-account }}
           project: ${{ inputs.project }}
           account: ${{ inputs.account }}
           state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment.roles

@@ -39,7 +39,7 @@ runs:
       run: |
         echo 'region="${{ inputs.region }}"' >> ./context.auto.tfvars
         echo 'account="${{ inputs.account }}"' >> ./context.auto.tfvars
-        echo 'project=${{ inputs.project }}"' >> ./context.auto.tfvars
+        echo 'project="${{ inputs.project }}"' >> ./context.auto.tfvars
         echo 'tooling-account="${{ inputs.tooling-account }}"' >> context.auto.tfvars
       shell: bash
     - name: Terraform-Init

@@ -43,10 +43,10 @@ runs:
       id: create-context-config
       working-directory: ${{ inputs.dir }}
       run: |
-        export TF_VAR_region='${{ inputs.region }}'
-        export TF_VAR_account='${{ inputs.account }}'
-        export TF_VAR_project='${{ inputs.project }}'
-        export TF_VAR_tooling_account='${{ inputs.tooling-account }}'
+        echo TF_VAR_region='${{ inputs.region }}' >> $GITHUB_ENV
+        echo TF_VAR_account='${{ inputs.account }}' >> $GITHUB_ENV
+        echo TF_VAR_project='${{ inputs.project }}' >> $GITHUB_ENV
+        echo TF_VAR_tooling_account='${{ inputs.tooling-account }}' >> $GITHUB_ENV
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

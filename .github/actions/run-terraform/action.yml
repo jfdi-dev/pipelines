@@ -34,18 +34,19 @@ runs:
         echo 'dynamodb_table="lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}"' >> ./config.s3.tfbackend
         echo 'key="${{ inputs.state-key }}"' >> ./config.s3.tfbackend
       shell: bash
-    - name: Create-Context-Config
-      working-directory: ${{ inputs.dir }}
-      run: |
-        echo 'region="${{ inputs.region }}"' >> ./context.auto.tfvars
-        echo 'account="${{ inputs.account }}"' >> ./context.auto.tfvars
-        echo 'project="${{ inputs.project }}"' >> ./context.auto.tfvars
-        echo 'tooling-account="${{ inputs.tooling-account }}"' >> context.auto.tfvars
-      shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}
       run: |
         terraform init -input=false -backend-config=./config.s3.tfbackend
+      shell: bash
+    - name: Create-Context-Config
+      id: create-context-config
+      working-directory: ${{ inputs.dir }}
+      run: |
+        TF_VAR_region='${{ inputs.region }}'
+        TF_VAR_account='${{ inputs.account }}'
+        TF_VAR_project='${{ inputs.project }}'
+        TF_VAR_tooling-account='${{ inputs.tooling-account }}'
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

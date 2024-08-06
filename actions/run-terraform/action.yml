@@ -32,3 +32,9 @@ runs:
       run: |
         terraform apply
       shell: bash
+    - name: Capture-Terraform-Outputs
+      working-directory: ${{ inputs.dir }}
+      run: |
+        terraform output >> $GITHUB_OUTPUT
+      shell: bash
+

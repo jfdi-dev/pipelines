@@ -17,9 +17,8 @@ inputs:
     description: "The key against which Terraform state will be stored."
     required: true
   dir:
-    description: "The directory which contains the Terraform module for creating deployment roles."
+    description: "The directory which contains the Terraform module to deploy."
     required: false
-    default: deployment-roles/
 runs:
   using: "composite"
   steps:

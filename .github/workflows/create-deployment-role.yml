@@ -23,8 +23,6 @@ on:
 jobs:
   AWS-SSO:
     runs-on: ubuntu-latest
-    outputs:
-      deployment-role-arn: ${{ steps.run-terraform.outputs.deployment-role-arn }}
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4
@@ -34,13 +32,15 @@ jobs:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.ci-role-arn }}
           account: ${{ inputs.account }}
-          deployment-role: ${{ inputs.project }}-iam-deployer
+          project: ${{ inputs.project }}
+          artifact: iam
       - name: Run-Terraform
         uses: jaskwa/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
+          dir: deployment-roles/
           region: ${{ inputs.region }}
           tooling-account: ${{ secrets.tooling-account }}
           project: ${{ inputs.project }}
           account: ${{ inputs.account }}
-          state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment.roles
+          state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment-role

@@ -43,7 +43,6 @@ jobs:
     secrets:
       tooling-account: ${{ secrets.tooling-account }}
       ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-      deployment-role-arn: ${{ needs.Create-Deployment-Role.outputs.deployment-role-arn }}
   # Sync-Files:
   #   needs: Deploy-Infrastructure
   #   uses: jaskwa/pipelines/.github/workflows/sync-files.yml@main

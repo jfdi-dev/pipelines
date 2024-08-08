@@ -1,0 +1,46 @@
+name: Deploy Infrastructure
+on:
+  workflow_call:
+    inputs:
+      region:
+        required: true
+        type: string
+      account:
+        required: true
+        type: string
+      project:
+        required: true
+        type: string
+      artifact:
+        required: true
+        type: string
+    secrets:
+      ci-role-arn:
+        required: true
+      tooling-account:
+        required: true
+
+jobs:
+  AWS-SSO:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git-Clone
+        uses: actions/checkout@v4
+      - name: On-AWS
+        uses: jaskwa/pipelines/.github/actions/on-aws@main
+        with:
+          region: ${{ inputs.region }}
+          ci-role-arn: ${{ secrets.ci-role-arn }}
+          account: ${{ inputs.account }}
+          project: ${{ inputs.project }}
+          artifact: ${{ inputs.artifact }}
+      - name: Run-Terraform
+        uses: jaskwa/pipelines/.github/actions/run-terraform@main
+        id: run-terraform
+        with:
+          dir: iac/
+          region: ${{ inputs.region }}
+          tooling-account: ${{ secrets.tooling-account }}
+          project: ${{ inputs.project }}
+          account: ${{ inputs.account }}
+          state-key: ${{ inputs.project }}.${{ inputs.artifact }}

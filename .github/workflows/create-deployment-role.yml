@@ -38,7 +38,7 @@ jobs:
         uses: jaskwa/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
-          dir: deployment-roles/
+          dir: deployment-role/
           region: ${{ inputs.region }}
           tooling-account: ${{ secrets.tooling-account }}
           project: ${{ inputs.project }}

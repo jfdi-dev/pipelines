@@ -2,7 +2,7 @@ name: Deploy Static Site
 on:
   workflow_call:
     inputs:
-      aws-region:
+      region:
         required: true
         type: string
       account:
@@ -25,7 +25,7 @@ jobs:
   Create-Deployment-Role:
     uses: jaskwa/pipelines/.github/workflows/create-deployment-role.yml@main
     with:
-      region: ${{ inputs.aws-region }}
+      region: ${{ inputs.region }}
       account: ${{ inputs.account }}
       project: ${{ inputs.project }}
       artifact: ${{ inputs.artifact }}
@@ -36,7 +36,7 @@ jobs:
     needs: Create-Deployment-Role
     uses: jaskwa/pipelines/.github/workflows/deploy-infrastructure.yml@main
     with:
-      region: ${{ inputs.aws-region }}
+      region: ${{ inputs.region }}
       account: ${{ inputs.account }}
       project: ${{ inputs.project }}
       artifact: ${{ inputs.artifact }}
@@ -47,7 +47,7 @@ jobs:
   #   needs: Deploy-Infrastructure
   #   uses: jaskwa/pipelines/.github/workflows/sync-files.yml@main
   #   with:
-  #     region: ${{ inputs.aws-region }}
+  #     region: ${{ inputs.region }}
   #     project: ${{ inputs.project }}
   #     artifact: ${{ inputs.artifact }}
   #     dir: ${{ inputs.files-directory }}

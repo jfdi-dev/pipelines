@@ -18,6 +18,8 @@ on:
         type: string
         default: dist/
     secrets:
+      tooling-account:
+        required: true
       aws-ci-role-arn:
         required: true
 

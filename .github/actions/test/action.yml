@@ -7,9 +7,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: List dir (in action)
-      run: ls
-      shell: bash
-    - name: List parent dir (in action)
-      run: ls ..
+    - name: Git-Clone
+      uses: actions/checkout@v4
+    - name: Git-Clone
+      uses: actions/checkout@v4
+      with:
+        repository: jdfi-dev/iac
+        path: jfdi-iac
+    - name: List parent dir (recursively)
+      run: ls .. -laR
       shell: bash

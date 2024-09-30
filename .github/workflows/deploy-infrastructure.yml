@@ -27,7 +27,7 @@ jobs:
       - name: Git-Clone
         uses: actions/checkout@v4
       - name: On-AWS
-        uses: jaskwa/pipelines/.github/actions/on-aws@main
+        uses: jfdi-dev/pipelines/.github/actions/on-aws@main
         with:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.ci-role-arn }}
@@ -35,7 +35,7 @@ jobs:
           project: ${{ inputs.project }}
           artifact: ${{ inputs.artifact }}
       - name: Run-Terraform
-        uses: jaskwa/pipelines/.github/actions/run-terraform@main
+        uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
           dir: iac/

@@ -25,7 +25,7 @@ on:
 
 jobs:
   Create-Deployment-Role:
-    uses: jaskwa/pipelines/.github/workflows/create-deployment-role.yml@main
+    uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
     with:
       region: ${{ inputs.region }}
       account: ${{ inputs.account }}
@@ -36,7 +36,7 @@ jobs:
       ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Deploy-Infrastructure:
     needs: Create-Deployment-Role
-    uses: jaskwa/pipelines/.github/workflows/deploy-infrastructure.yml@main
+    uses: jfdi-dev/pipelines/.github/workflows/deploy-infrastructure.yml@main
     with:
       region: ${{ inputs.region }}
       account: ${{ inputs.account }}
@@ -47,7 +47,7 @@ jobs:
       ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   # Sync-Files:
   #   needs: Deploy-Infrastructure
-  #   uses: jaskwa/pipelines/.github/workflows/sync-files.yml@main
+  #   uses: jfdi-dev/pipelines/.github/workflows/sync-files.yml@main
   #   with:
   #     region: ${{ inputs.region }}
   #     project: ${{ inputs.project }}

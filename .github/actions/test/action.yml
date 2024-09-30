@@ -1,0 +1,15 @@
+name: "Test Pipeline Ation"
+description: "Checking something..."
+inputs:
+  name:
+    description: "A name"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: List dir (in action)
+      run: ls
+      shell: bash
+    - name: List parent dir (in action)
+      run: ls ..
+      shell: bash

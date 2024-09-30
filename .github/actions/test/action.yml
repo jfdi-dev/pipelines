@@ -12,9 +12,7 @@ runs:
     - name: Git-Clone
       uses: actions/checkout@v4
       with:
-        repository: jfdi-dev/iac
-        path: jfdi-iac
-        ref: main
+        repository: jfdi-dev/pipelines
     - name: List parent dir (recursively)
       run: ls .. -laR
       shell: bash

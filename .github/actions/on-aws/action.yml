@@ -7,6 +7,9 @@ inputs:
   ci-role-arn:
     description: "The IAM Role ARN which supports GitHub OIDC."
     required: true
+  env:
+    description: "The Environment we want to deploy into."
+    required: true
   # account:
   #   description: "The name of the AWS account we are deploying into."
   #   required: true
@@ -26,6 +29,14 @@ runs:
         role-to-assume: ${{ inputs.ci-role-arn }}
         role-session-name: CI-GitHub-Action
         aws-region: ${{ inputs.region }}
+    - name: Get-Project-Context
+      id: get-project-context
+      uses: jfdi-dev/pipelines/.github/actions/project-context@main
+      with:
+        env: ${{ inputs.env }}
+    - name: Show-Outputs
+      run: echo "${{ inputs.env }}=${{ steps.get-project-context.outputs.account }}"
+      shell: bash
     # Now we are authenticated into that role.
     # Find the account id of the `account` parameter, which is a name.
     # - name: Lookup-Account-ID-From-Name

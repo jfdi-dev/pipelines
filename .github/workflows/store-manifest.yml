@@ -1,4 +1,4 @@
-name: Build Static Site
+name: Store Manifest
 on:
   workflow_call:
 
@@ -8,10 +8,8 @@ jobs:
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4
-      - name: NPM-Build
-        uses: jfdi-dev/pipelines/.github/actions/npm-build@main
-      - name: Save-Static-Files
+      - name: Save-Manifest
         uses: actions/upload-artifact@v4
         with:
-          name: static-site
-          path: .dist/
+          name: manifest
+          path: manifest.yml

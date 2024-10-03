@@ -27,6 +27,7 @@ runs:
         aws sts get-caller-identity
       shell: bash
     - name: Get-Project-Context
+      id: get-project-context
       run: |
         PROJECT_CONTEXT=$(aws ssm get-parameter --name project_context --query "Parameter.Value" --output text)
         echo "project-context=${PROJECT_CONTEXT}"

@@ -5,21 +5,10 @@ on:
       region:
         required: true
         type: string
-      account:
+      env:
         required: true
         type: string
-      project:
-        required: true
-        type: string
-      artifact:
-        required: true
-        type: string
-      files-directory:
-        type: string
-        default: dist/
     secrets:
-      tooling-account:
-        required: true
       aws-ci-role-arn:
         required: true
 

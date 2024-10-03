@@ -1,0 +1,12 @@
+name: Build Static Site
+on:
+  workflow_call:
+
+jobs:
+  AWS-SSO:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git-Clone
+        uses: actions/checkout@v4
+      - name: On-AWS
+        uses: jfdi-dev/pipelines/.github/actions/npm-build@main

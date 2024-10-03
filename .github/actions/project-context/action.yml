@@ -5,9 +5,6 @@ inputs:
     description: "The environment we want to deploy into."
     required: true
 outputs:
-  # account-id:
-  #   description: "The ID of the AWS Account that corresponds to the account name input"
-  #   value: ${{ steps.lookup-account-id.outputs.account-id }}
   project-context: 
     description: "The full Project Context"
     value: ${{ steps.get-project-context.outputs.project-context }}
@@ -41,15 +38,4 @@ runs:
         echo "account=${ACCOUNT}" >> "$GITHUB_OUTPUT"
         echo "project=${PROJECT}" >> "$GITHUB_OUTPUT"
       shell: bash
-    # - name: List-Org-Accounts
-    #   id: lookup-account-id
-    #   run: |
-    #     ACCOUNT_ID=$(aws organizations list-accounts --query "Accounts[?Name == '${{ inputs.account }}'].Id | [0]" --output text)
-    #     echo "account-id=${ACCOUNT_ID}"
-    #     echo "account-id=${ACCOUNT_ID}" >> "$GITHUB_OUTPUT"
-    #   shell: bash
-    # - name: Assert-Account-ID-Present
-    #   if: ${{ steps.lookup-account-id.outputs.account == '' }}
-    #   run: |
-    #     echo "Could not find Account ID from Account Name: '${{ inputs.account }}' (got: ${{ steps.lookup-account-id.outputs.account-id }})"; exit 1;
-    #   shell: bash
+    

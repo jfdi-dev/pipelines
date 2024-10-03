@@ -1,0 +1,15 @@
+name: "NPM Build"
+description: "Runs npm build script"
+# inputs:
+#   env:
+#     description: "The Environment to deploy into."
+#     required: true
+runs:
+  using: "composite"
+  steps:
+    - name: NPM-Build
+      run: npm run build
+      shell: bash
+    # - name: NPM-Test
+    #   run: npm run test
+    #   shell: bash

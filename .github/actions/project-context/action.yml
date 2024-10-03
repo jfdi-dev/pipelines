@@ -30,9 +30,9 @@ runs:
       run: |
         PROJECT_CONTEXT=$(aws ssm get-parameter --name project_context --query "Parameter.Value" --output text)
         echo "project-context=${PROJECT_CONTEXT}"
-        TOOLING_ACCOUNT=$(echo "${{ toJSON(PROJECT_CONTEXT) }}" | yq -r .accounts.tooling)
-        ACCOUNT=$(echo "${{ toJSON(PROJECT_CONTEXT) }}" | yq -r .accounts.${{ inputs.env }})
-        PROJECT=$(echo "${{ toJSON(PROJECT_CONTEXT) }}" | yq -r .project)
+        TOOLING_ACCOUNT=$(echo ${PROJECT_CONTEXT} | yq -r .accounts.tooling)
+        ACCOUNT=$(echo ${PROJECT_CONTEXT}" | yq -r .accounts.${{ inputs.env }})
+        PROJECT=$(echo ${PROJECT_CONTEXT}" | yq -r .project)
         echo "project-context=${PROJECT_CONTEXT}" >> "$GITHUB_OUTPUT"
         echo "tooling-account=${TOOLING_ACCOUNT}" >> "$GITHUB_OUTPUT"
         echo "account=${ACCOUNT}" >> "$GITHUB_OUTPUT"

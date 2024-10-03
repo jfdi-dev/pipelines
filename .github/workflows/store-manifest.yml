@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 jobs:
-  Build-Static-Site:
+  Store-Manifest:
     runs-on: ubuntu-latest
     steps:
       - name: Git-Clone

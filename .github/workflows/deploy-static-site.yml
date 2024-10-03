@@ -5,6 +5,9 @@ on:
       region:
         required: true
         type: string
+      env:
+        required: true
+        type: string
       # env:
       #   required: true
       #   type: string
@@ -17,6 +20,7 @@ jobs:
     uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
     with:
       region: ${{ inputs.region }}
+      env: ${{ inputs.env }}
       # account: ${{ inputs.account }}
       # project: ${{ inputs.project }}
       # artifact: ${{ inputs.artifact }}

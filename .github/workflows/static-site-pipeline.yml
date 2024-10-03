@@ -12,13 +12,13 @@ on:
 jobs:
   Build-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
-  # Dev-Deploy-Static-Site:
-  #   uses: jfdi-dev/pipelines/.github/workflows/deploy-static-site.yml@main
-  #   with:
-  #     region: ${{ inputs.region }}
-  #     env: dev
-  #   secrets:
-  #     ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  Dev-Deploy-Static-Site:
+    uses: jfdi-dev/pipelines/.github/workflows/deploy-static-site.yml@main
+    with:
+      region: ${{ inputs.region }}
+      # env: dev
+    secrets:
+      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   # # Test-Deploy-Static-Site:
   #   uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
   #   with:

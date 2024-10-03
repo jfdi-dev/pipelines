@@ -5,42 +5,40 @@ on:
       region:
         required: true
         type: string
-      account:
-        required: true
-        type: string
-      project:
-        required: true
-        type: string
-      artifact:
-        required: true
-        type: string
+      # account:
+      #   required: true
+      #   type: string
+      # project:
+      #   required: true
+      #   type: string
+      # artifact:
+      #   required: true
+      #   type: string
     secrets:
-      ci-role-arn:
+      aws-ci-role-arn:
         required: true
-      tooling-account:
-        required: true
+      # tooling-account:
+      #   required: true
 
 jobs:
-  AWS-SSO:
+  Create-Deployment-Role:
     runs-on: ubuntu-latest
     steps:
-      - name: Git-Clone
-        uses: actions/checkout@v4
       - name: On-AWS
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main
         with:
           region: ${{ inputs.region }}
-          ci-role-arn: ${{ secrets.ci-role-arn }}
-          account: ${{ inputs.account }}
-          project: ${{ inputs.project }}
-          artifact: iam
-      - name: Run-Terraform
-        uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
-        id: run-terraform
-        with:
-          dir: deployment-role/
-          region: ${{ inputs.region }}
-          tooling-account: ${{ secrets.tooling-account }}
-          project: ${{ inputs.project }}
-          account: ${{ inputs.account }}
-          state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment-role
+          ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          # account: ${{ inputs.account }}
+          # project: ${{ inputs.project }}
+          # artifact: iam
+      # - name: Run-Terraform
+      #   uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
+      #   id: run-terraform
+      #   with:
+      #     dir: deployment-role/
+      #     region: ${{ inputs.region }}
+      #     tooling-account: ${{ secrets.tooling-account }}
+      #     project: ${{ inputs.project }}
+      #     account: ${{ inputs.account }}
+      #     state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment-role

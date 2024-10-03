@@ -7,6 +7,9 @@ description: "Runs npm build script"
 runs:
   using: "composite"
   steps:
+    - name: NPM-CI
+      run: npm ci
+      shell: bash
     - name: NPM-Build
       run: npm run build
       shell: bash

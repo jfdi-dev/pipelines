@@ -7,6 +7,10 @@ description: "Runs npm build script"
 runs:
   using: "composite"
   steps:
+    - name: Setup-Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
     - name: NPM-CI
       run: npm ci
       shell: bash

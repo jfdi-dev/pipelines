@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 jobs:
-  AWS-SSO:
+  Build-Static-Site:
     runs-on: ubuntu-latest
     steps:
       - name: Git-Clone

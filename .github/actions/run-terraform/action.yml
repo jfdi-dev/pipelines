@@ -6,6 +6,8 @@ inputs:
     required: true
   project-context:
     description: "The full Project Context"
+  account-id:
+    description: "The ID of the AWS Account to deploy into"
   # tooling-account:
   #   description: "The id of the tooling account"
   #   required: true
@@ -36,7 +38,7 @@ runs:
       run: |
         echo 'bucket="${{ fromJSON(inputs.project-context).terraform.state }}"' >> ./config.s3.tfbackend
         echo 'dynamodb_table="${{ fromJSON(inputs.project-context).terraform.locks }}"' >> ./config.s3.tfbackend
-        echo 'key="${{ github.repository }}/${{ inputs.dir }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ inputs.account }}/${{ github.repository }}/${{ inputs.dir }}"' >> ./config.s3.tfbackend
       shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}

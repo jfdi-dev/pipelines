@@ -44,6 +44,7 @@ jobs:
           dir: deployment-role
           region: ${{ inputs.region }}
           project-context: ${{ steps.aws.outputs.project-context }}
+          account: ${{ steps.aws.outputs.account }}
           # tooling-account: ${{ steps.aws.outputs.project-context.tooling-account }}
           # project: ${{ steps.aws.outputs.project-context.project }}
           # account: ${{ steps.aws.outputs.project-context.account }}

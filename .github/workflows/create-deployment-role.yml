@@ -41,8 +41,9 @@ jobs:
         with:
           dir: deployment-role/
           region: ${{ inputs.region }}
-          tooling-account: ${{ steps.aws.outputs.project-context.tooling-account }}
-          project: ${{ steps.aws.outputs.project-context.project }}
-          account: ${{ steps.aws.outputs.project-context.account }}
-          state: ${{ steps.aws.outputs.project-context.terraform.state }}
-          locks: ${{ steps.aws.outputs.project-context.terraform.locks }}
+          project-context: ${{ steps.aws.outputs.project-context }}
+          # tooling-account: ${{ steps.aws.outputs.project-context.tooling-account }}
+          # project: ${{ steps.aws.outputs.project-context.project }}
+          # account: ${{ steps.aws.outputs.project-context.account }}
+          # state: ${{ steps.aws.outputs.project-context.terraform.state }}
+          # locks: ${{ steps.aws.outputs.project-context.terraform.locks }}

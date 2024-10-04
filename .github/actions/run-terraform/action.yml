@@ -4,21 +4,23 @@ inputs:
   region:
     description: "The region to deploy into"
     required: true
-  tooling-account:
-    description: "The id of the tooling account"
-    required: true
-  project:
-    description: "The name of the project."
-    required: true
-  account:
-    description: "The name of the account."
-    required: true
-  terraform-state:
-    description: "The key against which Terraform state will be stored."
-    required: true
-  terraform-locks:
-    description: "TF Locks table"
-    required: true
+  project-context:
+    description: "The full Project Context"
+  # tooling-account:
+  #   description: "The id of the tooling account"
+  #   required: true
+  # project:
+  #   description: "The name of the project."
+  #   required: true
+  # account:
+  #   description: "The name of the account."
+  #   required: true
+  # terraform-state:
+  #   description: "The key against which Terraform state will be stored."
+  #   required: true
+  # terraform-locks:
+  #   description: "TF Locks table"
+  #   required: true
   dir:
     description: "The directory which contains the Terraform module to deploy."
     required: false
@@ -32,9 +34,9 @@ runs:
     - name: Create-Backend-Config
       working-directory: ${{ inputs.dir }}
       run: |
-        echo 'bucket="${{ inputs.terraform-state }}"' >> ./config.s3.tfbackend
-        echo 'dynamodb_table="${{ inputs.terraform-locks }}"' >> ./config.s3.tfbackend
-        echo 'key="${{ inputs.project }}.${{ inputs.account }}.${{ inputs.artifact }}"' >> ./config.s3.tfbackend
+        echo 'bucket="${{ fromJSON(inputs.project-context).terraform.state }}"' >> ./config.s3.tfbackend
+        echo 'dynamodb_table="${{ fromJSON(inputs.project-context).terraform.locks }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ fromJSON(inputs.project-context).project }}.${{ fromJSON(inputs.project-context).account }}.${{ inputs.artifact }}"' >> ./config.s3.tfbackend
       shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}

@@ -48,10 +48,12 @@ runs:
         terraform init -input=false -backend-config=./config.s3.tfbackend
       shell: bash
     - name: Create-AWS-Provider
+      working-directory: ${{ inputs.dir }}
       run: |
         echo 'provider aws { assume_role { role_arn = "${{ inputs.role }}" } }' >> ./provider.tf
       shell: bash
     # - name: Create-AWS-Config
+    #   working-directory: ${{ inputs.dir }}
     #   run: | 
     #     echo "[default]" >> ./aws-config
     #     echo "role_arn=${{ inputs.role }}" >> ./aws-config

@@ -50,7 +50,13 @@ runs:
     - name: Create-AWS-Provider
       working-directory: ${{ inputs.dir }}
       run: |
-        echo 'provider aws { assume_role { role_arn = "${{ inputs.role }}" } }' >> ./provider.tf
+        cat << EOF > ./provider.tf
+        provider aws {
+          assume_role {
+            role_arn = "${{ inputs.role }}"
+          }
+        }
+        EOF
       shell: bash
     # - name: Create-AWS-Config
     #   working-directory: ${{ inputs.dir }}

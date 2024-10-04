@@ -8,6 +8,8 @@ inputs:
     description: "The full Project Context"
   account:
     description: "The ID of the AWS Account to deploy into"
+  role:
+    description: "The ARN of the Role to assume to deploy with"
   # tooling-account:
   #   description: "The id of the tooling account"
   #   required: true
@@ -46,6 +48,13 @@ runs:
         terraform init -input=false -backend-config=./config.s3.tfbackend
       shell: bash
     # Is this even necessary if AWS_DEFAULT_REGION is set?
+    - name: Create-AWS-Config
+      run: | 
+        echo "[default]"" >> ./aws-config
+        echo "role_arn=${{ inputs.role }}" >> ./aws-config
+        echo "role_session_name=CI-SESSION" >> ./aws-config
+        echo AWS_CONFIG_FILE='./aws-config' >> $GITHUB_ENV
+      shell: bash
     - name: Create-Context-Config
       id: create-context-config
       working-directory: ${{ inputs.dir }}

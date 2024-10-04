@@ -17,6 +17,12 @@ outputs:
   project:
     description: "The name of the Project"
     value: ${{ steps.get-project-context.outputs.project }}
+  terraform-state: 
+    description: "The ARN of the S3 bucket used to store TF state"
+    value: ${{ steps.get-project-context.outputs.terraform-state }}
+  terraform-locks:
+    description: "The ARN of the DynamoDB table used to store TF locks"
+    value: ${{ steps.get-project-context.outputs.terraform-locks }}
 runs:
   using: composite
   steps:
@@ -34,9 +40,13 @@ runs:
         TOOLING_ACCOUNT=$(echo ${PROJECT_CONTEXT} | yq -r .accounts.tooling)
         ACCOUNT=$(echo ${PROJECT_CONTEXT} | yq -r .accounts.${{ inputs.env }})
         PROJECT=$(echo ${PROJECT_CONTEXT} | yq -r .project)
+        TERRAFORM_STATE=$(echo ${PROJECT_CONTEXT} | yq -r .terraform.state)
+        TERRAFORM_LOCKS=$(echo ${PROJECT_CONTEXT} | yq -r .terraform.locks)
         echo "project-context=${PROJECT_CONTEXT}" >> "$GITHUB_OUTPUT"
         echo "tooling-account=${TOOLING_ACCOUNT}" >> "$GITHUB_OUTPUT"
         echo "account=${ACCOUNT}" >> "$GITHUB_OUTPUT"
         echo "project=${PROJECT}" >> "$GITHUB_OUTPUT"
+        echo "terraform-state=${TERRAFORM_STATE}" >> "$GITHUB_OUTPUT"
+        echo "terraform-locks=${TERRAFORM_LOCKS}" >> "$GITHUB_OUTPUT"
       shell: bash
     

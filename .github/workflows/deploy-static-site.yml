@@ -8,9 +8,6 @@ on:
       env:
         required: true
         type: string
-      # env:
-      #   required: true
-      #   type: string
     secrets:
       aws-ci-role-arn:
         required: true

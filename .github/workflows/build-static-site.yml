@@ -10,6 +10,9 @@ jobs:
         uses: actions/checkout@v4
       - name: NPM-Build
         uses: jfdi-dev/pipelines/.github/actions/npm-build@main
+      - name: Show-Dist
+        run: ls -laR .dist/
+        shell: bash
       - name: Save-Static-Files
         uses: actions/upload-artifact@v4
         with:

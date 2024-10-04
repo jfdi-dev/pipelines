@@ -1,5 +1,5 @@
-name: "Lookup Account ID from Name"
-description: "Given a friendly name for an organizational account, finds it's corresponding account id."
+name: "Get the Project Context from the Tooling Account"
+description: "Includes the full Project Context, the Tooling Account ID, the Name of the Project, and the Account ID for the Account assign to the specified Environment."
 inputs:
   env:
     description: "The environment we want to deploy into."

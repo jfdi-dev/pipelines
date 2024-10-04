@@ -16,6 +16,9 @@ outputs:
   project-context:
     description: "The Project Context retrieved from the Tooling Account."
     value: ${{ steps.get-project-context.outputs.project-context }}
+  account:
+    description: "The ID of the AWS Account to deploy into"
+    value: ${{ steps.get-project-context.outputs.account }}
 runs:
   using: "composite"
   steps:

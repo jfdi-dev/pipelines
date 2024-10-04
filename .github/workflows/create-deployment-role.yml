@@ -27,6 +27,8 @@ jobs:
   Create-Deployment-Role:
     runs-on: ubuntu-latest
     steps:
+      - name: Git-Clone
+        uses: actions/checkout@v4
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

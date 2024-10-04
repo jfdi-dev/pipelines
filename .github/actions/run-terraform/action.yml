@@ -47,20 +47,23 @@ runs:
       run: |
         terraform init -input=false -backend-config=./config.s3.tfbackend
       shell: bash
-    # Is this even necessary if AWS_DEFAULT_REGION is set?
-    - name: Create-AWS-Config
-      run: | 
-        echo "[default]" >> ./aws-config
-        echo "role_arn=${{ inputs.role }}" >> ./aws-config
-        echo "role_session_name=CI-SESSION" >> ./aws-config
-        echo AWS_CONFIG_FILE='./aws-config' >> $GITHUB_ENV
-      shell: bash
-    - name: Create-Context-Config
-      id: create-context-config
-      working-directory: ${{ inputs.dir }}
+    - name: Create-AWS-Provider
       run: |
-        echo TF_VAR_region='${{ inputs.region }}' >> $GITHUB_ENV
+        echo 'provider aws { assume_role { role_arn = "${{ inputs.role }}" } }' >> ./provider.tf
       shell: bash
+    # - name: Create-AWS-Config
+    #   run: | 
+    #     echo "[default]" >> ./aws-config
+    #     echo "role_arn=${{ inputs.role }}" >> ./aws-config
+    #     echo "role_session_name=CI-SESSION" >> ./aws-config
+    #     echo AWS_CONFIG_FILE='./aws-config' >> $GITHUB_ENV
+    #   shell: bash
+    # - name: Create-Context-Config
+    #   id: create-context-config
+    #   working-directory: ${{ inputs.dir }}
+    #   run: |
+    #     echo TF_VAR_region='${{ inputs.region }}' >> $GITHUB_ENV
+    # shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}
       run: |

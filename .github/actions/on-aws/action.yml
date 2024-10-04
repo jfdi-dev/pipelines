@@ -12,6 +12,10 @@ inputs:
     required: true
   artifact:
     description: "The Artifact being deployed."
+outputs:
+  project-context:
+    description: "The Project Context retrieved from the Tooling Account."
+    value: ${{ steps.get-project-context.outputs }}
 runs:
   using: "composite"
   steps:

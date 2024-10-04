@@ -28,19 +28,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: On-AWS
+        id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main
         with:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.aws-ci-role-arn }}
           env: ${{ inputs.env }}
           artifact: iam
-      # - name: Run-Terraform
-      #   uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
-      #   id: run-terraform
-      #   with:
-      #     dir: deployment-role/
-      #     region: ${{ inputs.region }}
-      #     tooling-account: ${{ secrets.tooling-account }}
-      #     project: ${{ inputs.project }}
-      #     account: ${{ inputs.account }}
-      #     state-key: ${{ inputs.project }}.${{ inputs.artifact }}.deployment-role
+      - name: Run-Terraform
+        uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
+        id: run-terraform
+        with:
+          dir: deployment-role/
+          region: ${{ inputs.region }}
+          tooling-account: ${{ steps.aws.outputs.project-context.tooling-account }}
+          project: ${{ steps.aws.outputs.project-context.project }}
+          account: ${{ steps.aws.outputs.project-context.account }}
+          state: ${{ steps.aws.outputs.project-context.terraform.state }}
+          locks: ${{ steps.aws.outputs.project-context.terraform.locks }}

@@ -13,8 +13,11 @@ inputs:
   account:
     description: "The name of the account."
     required: true
-  state-key:
+  terraform-state:
     description: "The key against which Terraform state will be stored."
+    required: true
+  terraform-locks:
+    description: "TF Locks table"
     required: true
   dir:
     description: "The directory which contains the Terraform module to deploy."
@@ -29,23 +32,21 @@ runs:
     - name: Create-Backend-Config
       working-directory: ${{ inputs.dir }}
       run: |
-        echo 'bucket="state.terraform.${{ inputs.account }}.${{ inputs.project }}"' >> ./config.s3.tfbackend
-        echo 'dynamodb_table="lock.state.terraform.${{ inputs.account }}.${{ inputs.project }}"' >> ./config.s3.tfbackend
-        echo 'key="${{ inputs.state-key }}"' >> ./config.s3.tfbackend
+        echo 'bucket="${{ inputs.terraform-state }}"' >> ./config.s3.tfbackend
+        echo 'dynamodb_table="${{ inputs.terraform-locks }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ inputs.project }}.${{ inputs.account }}.${{ inputs.artifact }}"' >> ./config.s3.tfbackend
       shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}
       run: |
         terraform init -input=false -backend-config=./config.s3.tfbackend
       shell: bash
+    # Is this even necessary if AWS_DEFAULT_REGION is set?
     - name: Create-Context-Config
       id: create-context-config
       working-directory: ${{ inputs.dir }}
       run: |
         echo TF_VAR_region='${{ inputs.region }}' >> $GITHUB_ENV
-        echo TF_VAR_account='${{ inputs.account }}' >> $GITHUB_ENV
-        echo TF_VAR_project='${{ inputs.project }}' >> $GITHUB_ENV
-        echo TF_VAR_tooling_account='${{ inputs.tooling-account }}' >> $GITHUB_ENV
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

@@ -50,7 +50,7 @@ runs:
     # Is this even necessary if AWS_DEFAULT_REGION is set?
     - name: Create-AWS-Config
       run: | 
-        echo "[default]"" >> ./aws-config
+        echo "[default]" >> ./aws-config
         echo "role_arn=${{ inputs.role }}" >> ./aws-config
         echo "role_session_name=CI-SESSION" >> ./aws-config
         echo AWS_CONFIG_FILE='./aws-config' >> $GITHUB_ENV

@@ -31,12 +31,15 @@ runs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.9.3
+    - name: LS
+      run: ls . -laR
+      shell: bash
     - name: Create-Backend-Config
       working-directory: ${{ inputs.dir }}
       run: |
         echo 'bucket="${{ fromJSON(inputs.project-context).terraform.state }}"' >> ./config.s3.tfbackend
         echo 'dynamodb_table="${{ fromJSON(inputs.project-context).terraform.locks }}"' >> ./config.s3.tfbackend
-        echo 'key="${{ fromJSON(inputs.project-context).project }}.${{ fromJSON(inputs.project-context).account }}.${{ inputs.artifact }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ github.repository }}/${{ inputs.dir }}"' >> ./config.s3.tfbackend
       shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}

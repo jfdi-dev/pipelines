@@ -31,9 +31,6 @@ runs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.9.3
-    - name: LS
-      run: ls . -laR
-      shell: bash
     - name: Create-Backend-Config
       working-directory: ${{ inputs.dir }}
       run: |

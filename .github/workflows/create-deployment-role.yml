@@ -41,7 +41,7 @@ jobs:
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
-          dir: deployment-role/
+          dir: deployment-role
           region: ${{ inputs.region }}
           project-context: ${{ steps.aws.outputs.project-context }}
           # tooling-account: ${{ steps.aws.outputs.project-context.tooling-account }}

@@ -5,42 +5,50 @@ on:
       region:
         required: true
         type: string
-      account:
+      env:
         required: true
         type: string
-      project:
-        required: true
-        type: string
-      artifact:
+      deployment-role:
         required: true
         type: string
     secrets:
-      ci-role-arn:
-        required: true
-      tooling-account:
+      aws-ci-role-arn:
         required: true
 
 jobs:
   AWS-SSO:
     runs-on: ubuntu-latest
     steps:
-      - name: Git-Clone
+      - name: Clone-Repo
         uses: actions/checkout@v4
+      - name: Clone-JFDI-IAC
+        uses: actions/checkout@v4
+        with:
+          repository: jfdi-dev/iac
+          path: iac
+      - name: Read-Manifest
+        id: read-manifest
+        run: |
+          MANIFEST=$(cat ./manifest.yml | jq -c .)
+          echo "manifest=${MANIFEST}" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Copy-Manifest
+        run: cp ./manifest.yml iac/modules/www
       - name: On-AWS
+        id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main
         with:
           region: ${{ inputs.region }}
-          ci-role-arn: ${{ secrets.ci-role-arn }}
-          account: ${{ inputs.account }}
-          project: ${{ inputs.project }}
-          artifact: ${{ inputs.artifact }}
+          ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          env: ${{ inputs.env }}
+          artifact: www
       - name: Run-Terraform
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
-          dir: iac/
+          dir: iac/modules/www
+          artifact: www
           region: ${{ inputs.region }}
-          tooling-account: ${{ secrets.tooling-account }}
-          project: ${{ inputs.project }}
-          account: ${{ inputs.account }}
-          state-key: ${{ inputs.project }}.${{ inputs.artifact }}
+          project-context: ${{ steps.aws.outputs.project-context }}
+          account: ${{ steps.aws.outputs.account }}
+          role: ${{ inputs.deployment-role }}

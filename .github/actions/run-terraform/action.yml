@@ -10,21 +10,8 @@ inputs:
     description: "The ID of the AWS Account to deploy into"
   role:
     description: "The ARN of the Role to assume to deploy with"
-  # tooling-account:
-  #   description: "The id of the tooling account"
-  #   required: true
-  # project:
-  #   description: "The name of the project."
-  #   required: true
-  # account:
-  #   description: "The name of the account."
-  #   required: true
-  # terraform-state:
-  #   description: "The key against which Terraform state will be stored."
-  #   required: true
-  # terraform-locks:
-  #   description: "TF Locks table"
-  #   required: true
+  artifact:
+    description: "The name of the artifact to deploy."
   dir:
     description: "The directory which contains the Terraform module to deploy."
     required: false
@@ -40,7 +27,7 @@ runs:
       run: |
         echo 'bucket="${{ fromJSON(inputs.project-context).terraform.state }}"' >> ./config.s3.tfbackend
         echo 'dynamodb_table="${{ fromJSON(inputs.project-context).terraform.locks }}"' >> ./config.s3.tfbackend
-        echo 'key="${{ inputs.account }}/${{ github.repository }}/${{ inputs.dir }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ inputs.account }}/${{ github.repository }}/${{ inputs.artifact }}"' >> ./config.s3.tfbackend
       shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.dir }}

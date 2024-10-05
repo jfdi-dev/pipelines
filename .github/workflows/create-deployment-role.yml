@@ -8,20 +8,9 @@ on:
       env:
         required: true
         type: string
-      # account:
-      #   required: true
-      #   type: string
-      # project:
-      #   required: true
-      #   type: string
-      # artifact:
-      #   required: true
-      #   type: string
     secrets:
       aws-ci-role-arn:
         required: true
-      # tooling-account:
-      #   required: true
 
 jobs:
   Create-Deployment-Role:
@@ -34,8 +23,8 @@ jobs:
         with:
           repository: jfdi-dev/iac
           path: iac
-      - name: Copy-Deployment-Role-Module
-        run: cp -r iac/modules/contextual/deployer-role deployment-role
+      - name: Copy-Manifest
+        run: cp ./manifest.yml iac/modules/contextual/deployer-role/
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main
@@ -48,7 +37,8 @@ jobs:
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
-          dir: deployment-role
+          dir: iac/modules/contextual/deployer-role
+          artifact: deployment-role
           region: ${{ inputs.region }}
           project-context: ${{ steps.aws.outputs.project-context }}
           account: ${{ steps.aws.outputs.account }}

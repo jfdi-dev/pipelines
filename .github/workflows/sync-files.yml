@@ -17,6 +17,9 @@ on:
       cloudfront-distribution:
         required: true
         type: string
+    secrets:
+      aws-ci-role-arn:
+        required: true
 
 jobs:
   Sync-Files:

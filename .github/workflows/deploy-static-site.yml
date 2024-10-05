@@ -41,4 +41,4 @@ jobs:
       s3-bucket: ${{ fromJSON(needs.Deploy-Infrastructure.outputs).s3-bucket.value }}
       cloudfront-distribution: ${{ fromJSON(needs.Deploy-Infrastructure.outputs).cloudfront-distribution.value }}
     secrets:
-      ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}

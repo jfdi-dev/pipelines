@@ -14,10 +14,16 @@ on:
     secrets:
       aws-ci-role-arn:
         required: true
+    outputs:
+      terraform-output:
+        description: "The Terraform output"
+        value: ${{ jobs.Deploy-Infrastructure.outputs.terraform-output }}
 
 jobs:
-  AWS-SSO:
+  Deploy-Infrastructure:
     runs-on: ubuntu-latest
+    outputs:
+      terraform-output: ${{ steps.run-terraform.outputs.terraform-output }}
     steps:
       - name: Clone-Repo
         uses: actions/checkout@v4

@@ -1,0 +1,60 @@
+name: Sync Files
+on:
+  workflow_call:
+    inputs:
+      region:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+      role:
+        required: true
+        type: string
+      s3-bucket:
+        required: true
+        type: string
+      cloudfront-distribution:
+        required: true
+        type: string
+
+jobs:
+  Sync-Files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download-Static-Site
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+      - name: On-AWS
+        id: aws
+        uses: jfdi-dev/pipelines/.github/actions/on-aws@main
+        with:
+          region: ${{ inputs.region }}
+          ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          env: ${{ inputs.env }}
+          artifact: www
+      # Assume the formatted Role
+      - name: AWS-Assume-Role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ inputs.region }}
+          role-to-assume: ${{ inputs.role }}
+          role-skip-session-tagging: true
+          role-chaining: true
+      - name: AWS-S3-Sync
+        shell: bash
+        run: |
+          aws s3 sync ./ s3://${{ inputs.s3-bucket }}
+      - name: Invalidate-Cloudfront-Cache
+        shell: bash
+        run: |
+          echo "Getting CloudFront Distribution ID..."
+          CLOUDFRONT_DISTRIBUTION_ID=${{ inputs.cloudfront-distribution }}
+          echo "Found: $CLOUDFRONT_DISTRIBUTION_ID"
+          echo "Creating CloudFront Cache Invalidation..."
+          CLOUDFRONT_INVALIDATION_ID=`aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*" --output text --query Invalidation.Id`
+          echo "Created: $CLOUDFRONT_INVALIDATION_ID"
+          echo "Waiting for Invalidation Completion..."
+          aws cloudfront wait invalidation-completed --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --id $CLOUDFRONT_INVALIDATION_ID
+          echo "Invalidation Completed!"

@@ -47,6 +47,13 @@ runs:
             role_arn = "${{ inputs.role }}"
           }
         }
+        provider aws {
+          alias = "north-virginia"
+          region = "us-east-1"
+          assume_role {
+            role_arn = "${{ inputs.role }}"
+          }
+        }
         EOF
       shell: bash
     # - name: Create-AWS-Config

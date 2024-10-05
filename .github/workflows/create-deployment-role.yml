@@ -33,6 +33,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: jfdi-dev/iac
+          path: iac
       - name: Copy-Deployment-Role-Module
         run: cp iac/modules/contextual/deployer-role deployment-role
       - name: On-AWS

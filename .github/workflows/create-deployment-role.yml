@@ -45,3 +45,9 @@ jobs:
           project-context: ${{ steps.aws.outputs.project-context }}
           account: ${{ steps.aws.outputs.account }}
           role: ${{ steps.aws.outputs.role }}
+      - name: Show-Output-1
+        run: echo "${{ steps.run-terraform.outputs.terraform-output }}"
+      - name: Show-Output-2
+        run: echo "${{ fromJSON(steps.run-terraform.outputs.terraform-output) }}"
+      - name: Show-Output-3
+        run: echo "${{ fromJSON(steps.run-terraform.outputs.terraform-output).role_arn.value }}"

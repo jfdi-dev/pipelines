@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Show-ARN
         run: |
-          echo "${{ needs.Create-Deployment-Role.outputs.deployment_role_arn }}"
+          echo "${{ needs.Create-Deployment-Role.outputs.deployment-role-arn }}"
         shell: bash
   # Deploy-Infrastructure:
   #   needs: Create-Deployment-Role

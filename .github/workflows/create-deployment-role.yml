@@ -11,12 +11,16 @@ on:
     secrets:
       aws-ci-role-arn:
         required: true
+    outputs:
+      deployment-role-arn:
+        description: "The ARN of the deployment Role that was created."
+        value: ${{ jobs.Create-Deployment-Role.outputs.deployment-role-arn }}
 
 jobs:
   Create-Deployment-Role:
     runs-on: ubuntu-latest
     outputs:
-      deployment_role_arn: ${{ fromJSON(steps.run-terraform.outputs.terraform-output).role_arn.value }}
+      deployment-role-arn: ${{ fromJSON(steps.run-terraform.outputs.terraform-output).role_arn.value }}
     steps:
       - name: Clone-Repo
         uses: actions/checkout@v4
@@ -45,9 +49,3 @@ jobs:
           project-context: ${{ steps.aws.outputs.project-context }}
           account: ${{ steps.aws.outputs.account }}
           role: ${{ steps.aws.outputs.role }}
-      - name: Show-Output-1
-        run: echo "${{ steps.run-terraform.outputs.terraform-output }}"
-      - name: Show-Output-2
-        run: echo "${{ fromJSON(steps.run-terraform.outputs.terraform-output) }}"
-      - name: Show-Output-3
-        run: echo "${{ fromJSON(steps.run-terraform.outputs.terraform-output).role_arn.value }}"

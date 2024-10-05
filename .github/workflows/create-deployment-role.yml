@@ -27,18 +27,15 @@ jobs:
   Create-Deployment-Role:
     runs-on: ubuntu-latest
     steps:
-      - run: ls -laR
       - name: Clone-Repo
         uses: actions/checkout@v4
-      - run: ls -laR
       - name: Clone-JFDI-IAC
         uses: actions/checkout@v4
         with:
           repository: jfdi-dev/iac
           path: iac
-      - run: ls -laR
       - name: Copy-Deployment-Role-Module
-        run: cp iac/modules/contextual/deployer-role deployment-role
+        run: cp -r iac/modules/contextual/deployer-role deployment-role
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

@@ -27,8 +27,14 @@ jobs:
   Create-Deployment-Role:
     runs-on: ubuntu-latest
     steps:
-      - name: Git-Clone
+      - name: Clone-Repo
         uses: actions/checkout@v4
+      - name: Clone-JFDI-IAC
+        uses: actions/checkout@v4
+        with:
+          repository: jfdi-dev/iac
+      - name: Copy-Deployment-Role-Module
+        run: cp iac/modules/contextual/deployer-role deployment-role
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main
@@ -46,8 +52,3 @@ jobs:
           project-context: ${{ steps.aws.outputs.project-context }}
           account: ${{ steps.aws.outputs.account }}
           role: ${{ steps.aws.outputs.role }}
-          # tooling-account: ${{ steps.aws.outputs.project-context.tooling-account }}
-          # project: ${{ steps.aws.outputs.project-context.project }}
-          # account: ${{ steps.aws.outputs.project-context.account }}
-          # state: ${{ steps.aws.outputs.project-context.terraform.state }}
-          # locks: ${{ steps.aws.outputs.project-context.terraform.locks }}

@@ -73,7 +73,7 @@ runs:
       working-directory: ${{ inputs.dir }}
       run: |
         terraform output -json
-        TERRAFORM_OUTPUT=$(terraform output -json | yq . -I0)
+        TERRAFORM_OUTPUT=$(terraform output -json | yq . -j -I0)
         echo "terraform-output=${TERRAFORM_OUTPUT}"
         echo "terraform-output=${TERRAFORM_OUTPUT}" >> "$GITHUB_OUTPUT"
       shell: bash

@@ -24,6 +24,14 @@ jobs:
     secrets:
       # tooling-account: ${{ secrets.tooling-account }}
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  Deploy-Infrastructure:
+    needs: Create-Deployment-Role
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show-ARN
+        run: |
+          echo "${{ needs.Create-Deployment-Role.outputs.deployment_role_arn }}"
+        shell: bash
   # Deploy-Infrastructure:
   #   needs: Create-Deployment-Role
   #   uses: jfdi-dev/pipelines/.github/workflows/deploy-infrastructure.yml@main

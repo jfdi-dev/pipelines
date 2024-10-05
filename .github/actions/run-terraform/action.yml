@@ -15,6 +15,10 @@ inputs:
   dir:
     description: "The directory which contains the Terraform module to deploy."
     required: false
+outputs:
+  terraform-output:
+    description: "The JSON output from Terraform"
+    value: ${{ steps.terraform-output.outputs.terraform-output }}
 runs:
   using: "composite"
   steps:
@@ -63,4 +67,11 @@ runs:
       working-directory: ${{ inputs.dir }}
       run: |
         terraform apply -input=false -auto-approve
+      shell: bash
+    - name: Terraform-Output
+      id: terraform-output
+      working-directory: ${{ inputs.dir }}
+      run: |
+        TERRAFORM_OUTPUT=$(terraform output -json)
+        echo "terraform-output=${TERRAFORM_OUTPUT}" >> "$GITHUB_OUTPUT"
       shell: bash

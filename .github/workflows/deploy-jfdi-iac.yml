@@ -32,7 +32,7 @@ jobs:
   Deploy-JFDI-IAC:
     runs-on: ubuntu-latest
     outputs:
-      terraform-output: ${{ steps.run-terraform.outputs.terraform-output}}
+      terraform-output: ${{ steps.run-terraform.outputs.terraform-output }}
     steps:
       - name: Clone-JFDI-IAC
         uses: actions/checkout@v4

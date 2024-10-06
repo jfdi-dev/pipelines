@@ -28,7 +28,7 @@ jobs:
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
-      deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role-arn.value }}
+      deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
       module: www
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}

@@ -1,9 +1,6 @@
 name: "Run Terraform"
 description: "Setup Terraform for pipeline use, tf init, tf apply"
 inputs:
-  region:
-    description: "The region to deploy into"
-    required: true
   project-context:
     description: "The full Project Context"
   account:
@@ -15,6 +12,7 @@ inputs:
   dir:
     description: "The directory which contains the Terraform module to deploy."
     required: false
+    default: ./
 outputs:
   terraform-output:
     description: "The JSON output from Terraform"
@@ -38,38 +36,12 @@ runs:
       run: |
         terraform init -input=false -backend-config=./config.s3.tfbackend
       shell: bash
-    - name: Create-AWS-Provider
+    - name: Create-Context-Config
+      id: create-context-config
       working-directory: ${{ inputs.dir }}
       run: |
-        cat << EOF > ./provider.tf
-        provider aws {
-          assume_role {
-            role_arn = "${{ inputs.role }}"
-          }
-        }
-        provider aws {
-          alias = "north-virginia"
-          region = "us-east-1"
-          assume_role {
-            role_arn = "${{ inputs.role }}"
-          }
-        }
-        EOF
+        echo TF_VAR_role='${{ inputs.role }}' >> $GITHUB_ENV
       shell: bash
-    # - name: Create-AWS-Config
-    #   working-directory: ${{ inputs.dir }}
-    #   run: | 
-    #     echo "[default]" >> ./aws-config
-    #     echo "role_arn=${{ inputs.role }}" >> ./aws-config
-    #     echo "role_session_name=CI-SESSION" >> ./aws-config
-    #     echo AWS_CONFIG_FILE='./aws-config' >> $GITHUB_ENV
-    #   shell: bash
-    # - name: Create-Context-Config
-    #   id: create-context-config
-    #   working-directory: ${{ inputs.dir }}
-    #   run: |
-    #     echo TF_VAR_region='${{ inputs.region }}' >> $GITHUB_ENV
-    # shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}
       run: |

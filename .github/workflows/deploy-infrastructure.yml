@@ -32,12 +32,6 @@ jobs:
         with:
           repository: jfdi-dev/iac
           path: iac
-      # - name: Read-Manifest
-      #   id: read-manifest
-      #   run: |
-      #     MANIFEST=$(cat ./manifest.yml | )
-      #     echo "manifest=${MANIFEST}" >> $GITHUB_OUTPUT
-      #   shell: bash
       - name: Copy-Manifest
         run: cp ./manifest.yml iac/modules/www
       - name: On-AWS
@@ -47,7 +41,6 @@ jobs:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.aws-ci-role-arn }}
           env: ${{ inputs.env }}
-          artifact: www
       - name: Run-Terraform
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform

@@ -38,6 +38,12 @@ jobs:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.aws-ci-role-arn }}
           env: ${{ inputs.env }}
+      - name: Format-Role-Arn
+        id: format-role-arn
+        uses: jfdi-dev/pipelines/.github/actions/format-deployment-role-arn@main
+        with:
+          account-id: ${{ steps.aws.outputs.account }}
+          project: ${{ steps.aws.outputs.project }}
           artifact: iam
       - name: Run-Terraform
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
@@ -45,7 +51,6 @@ jobs:
         with:
           dir: iac/modules/contextual/deployer-role
           artifact: deployment-role
-          region: ${{ inputs.region }}
           project-context: ${{ steps.aws.outputs.project-context }}
           account: ${{ steps.aws.outputs.account }}
-          role: ${{ steps.aws.outputs.role }}
+          role: ${{ steps.format-role-arn.outputs.role-arn }}

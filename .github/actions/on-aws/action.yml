@@ -10,8 +10,6 @@ inputs:
   env:
     description: "The Environment we want to deploy into."
     required: true
-  artifact:
-    description: "The Artifact being deployed."
 outputs:
   project-context:
     description: "The Project Context retrieved from the Tooling Account."
@@ -19,9 +17,7 @@ outputs:
   account:
     description: "The ID of the AWS Account to deploy into"
     value: ${{ steps.get-project-context.outputs.account }}
-  role:
-    description: "The ARN of the Role to assume to deploy infrastructure"
-    value: ${{ steps.format-role-arn.outputs.role-arn }}
+
 runs:
   using: "composite"
   steps:
@@ -38,18 +34,3 @@ runs:
       with:
         env: ${{ inputs.env }}
     # With the Account ID and a Role Name, we can format a Role ARN
-    - name: Format-Role-Arn
-      id: format-role-arn
-      uses: jfdi-dev/pipelines/.github/actions/format-deployment-role-arn@main
-      with:
-        account-id: ${{ steps.get-project-context.outputs.account }}
-        project: ${{ steps.get-project-context.outputs.project }}
-        artifact: ${{ inputs.artifact }}
-    # Assume the formatted Role
-    # - name: AWS-Assume-Role
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   with:
-    #     aws-region: ${{ inputs.region }}
-    #     role-to-assume: ${{ steps.format-role-arn.outputs.role-arn }}
-    #     role-skip-session-tagging: true
-    #     role-chaining: true

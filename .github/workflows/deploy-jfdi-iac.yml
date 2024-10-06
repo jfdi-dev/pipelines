@@ -1,0 +1,68 @@
+name: Deploy JFDI IAC
+on:
+  workflow_call:
+    inputs:
+      region:
+        description: ""
+        type: string
+        required: true
+      env:
+        description: ""
+        type: string
+        required: true
+      deployment-role:
+        description: ""
+        type: string
+        required: false
+        default: null
+      module:
+        description: "The name of the JFDI IAC module to be deployed."
+        type: string
+        required: true
+    secrets:
+      aws-ci-role-arn:
+        description: ""
+        required: true
+    outputs:
+      terraform-output:
+        description: ""
+        value: ${{ jobs.Deploy-JFDI-IAC.outputs.terraform-output }}
+
+jobs:
+  Deploy-JFDI-IAC:
+    runs-on: ubuntu-latest
+    outputs:
+      terraform-output: ${{ steps.run-terraform.outputs.terraform-output}}
+    steps:
+      - name: Clone-JFDI-IAC
+        uses: actions/checkout@v4
+        with:
+          repository: jfdi-dev/iac
+      # Fail if requested module cannot be found
+      - name: Check-JFDI-Module-Exists
+        if: ${{ hashFiles(format('modules/root/{0}', inputs.module)) == '' }}
+        run:
+          echo "::error title=JFDI Module Not Found::The specified module `${{ inputs.module }}` could not be found in the `jfdi-dev/iac` repository (`modules/root/` directory)."
+          exit 1
+      - name: Download-Manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+          path: ${{ format('modules/root/{0}', inputs.module) }}
+      - name: On-AWS
+        id: aws
+        uses: jfdi-dev/pipelines/.github/actions/on-aws@main
+        with:
+          region: ${{ inputs.region }}
+          ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          env: ${{ inputs.env }}
+      - name: Run-Terraform
+        uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
+        id: run-terraform
+        with:
+          dir: ${{ format('modules/root/${0}', inputs.module) }}
+          artifact: ${{ inputs.module }}
+          region: ${{ inputs.region }}
+          project-context: ${{ steps.aws.outputs.project-context }}
+          account: ${{ steps.aws.outputs.account }}
+          role: ${{ inputs.deployment-role != null && inputs.deployment-role || steps.aws.outputs.role }}

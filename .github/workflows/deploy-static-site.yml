@@ -57,7 +57,7 @@ jobs:
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
-      role: ${{ needs.Create-Deployment-Role.outputs.deployment-role-arn }}
+      role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
       s3-bucket: ${{ fromJSON(needs.Deploy-Infrastructure.outputs.terraform-output).s3-bucket.value }}
       cloudfront-distribution: ${{ fromJSON(needs.Deploy-Infrastructure.outputs.terraform-output).cloudfront-distribution.value }}
     secrets:

@@ -60,7 +60,7 @@ jobs:
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform
         with:
-          dir: ${{ format('modules/root/${0}', inputs.module) }}
+          dir: ${{ format('modules/root/{0}', inputs.module) }}
           artifact: ${{ inputs.module }}
           region: ${{ inputs.region }}
           project-context: ${{ steps.aws.outputs.project-context }}

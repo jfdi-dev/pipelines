@@ -9,7 +9,7 @@ jobs:
   Store-Manifest:
     runs-on: ubuntu-latest
     outputs:
-      manifest: ${{ steps.save-manifest.outputs.artifact-id != null }}
+      manifest: ${{ steps.save-manifest.outputs.artifact-id != null && 'manifest' || null }}
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4

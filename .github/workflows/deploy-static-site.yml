@@ -9,8 +9,7 @@ on:
         required: true
         type: string
       manifest:
-        type: boolean
-        default: false
+        type: string
     secrets:
       aws-ci-role-arn:
         required: true

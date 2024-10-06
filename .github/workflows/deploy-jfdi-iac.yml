@@ -61,7 +61,7 @@ jobs:
         uses: jfdi-dev/pipelines/.github/actions/format-deployment-role-arn@main
         with:
           account-id: ${{ steps.aws.outputs.account }}
-          project: ${{ steps.aws.outputs.project-context.project }}
+          project: ${{ fromJson(steps.aws.outputs.project-context).project }}
           artifact: iam
       - name: Run-Terraform
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main

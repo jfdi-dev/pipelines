@@ -16,6 +16,9 @@ jobs:
     uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
   Dev-Deploy-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-static-site.yml@main
+    needs:
+      - Store-Manifest
+      - Build-Static-Site
     with:
       region: ${{ inputs.region }}
       env: dev

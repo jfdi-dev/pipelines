@@ -21,6 +21,7 @@ jobs:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
       module: deployment-role
+      manifest: ${{ inputs.manifest }}
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Deploy-Infrastructure:

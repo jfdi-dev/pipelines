@@ -1,15 +1,22 @@
 name: Store Manifest
 on:
   workflow_call:
+    outputs:
+      manifest:
+        value: ${{ jobs.Store-Manifest.outputs.manifest }}
 
 jobs:
   Store-Manifest:
     runs-on: ubuntu-latest
+    outputs:
+      manifest: ${{ steps.save-manifest.outputs.artifact-id != null }}
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4
       - name: Save-Manifest
+        id: save-manifest
         uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('manifest.yml') != '' }}
         with:
           name: manifest
           path: manifest.yml

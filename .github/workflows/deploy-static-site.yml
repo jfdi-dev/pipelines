@@ -8,6 +8,9 @@ on:
       env:
         required: true
         type: string
+      manifest:
+        type: boolean
+        default: false
     secrets:
       aws-ci-role-arn:
         required: true
@@ -28,6 +31,7 @@ jobs:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
       deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
+      manifest: ${{ inputs.manifest }}
       module: www
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}

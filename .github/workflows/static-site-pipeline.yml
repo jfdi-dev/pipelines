@@ -21,16 +21,17 @@ jobs:
       - Build-Static-Site
     with:
       region: ${{ inputs.region }}
+      manifest: ${{ needs.Store-Manifest.outputs.manifest }}
       env: dev
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-  # # Test-Deploy-Static-Site:
-  #   uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
-  #   with:
-  #     region: ${{ inputs.region }}
-  #     env: test
-  #   secrets:
-  #     ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  Test-Deploy-Static-Site:
+    uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
+    with:
+      region: ${{ inputs.region }}
+      env: test
+    secrets:
+      ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   # Prod-Deploy-Static-Site:
   #   uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
   #   with:

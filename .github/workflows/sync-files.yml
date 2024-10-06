@@ -36,7 +36,6 @@ jobs:
           region: ${{ inputs.region }}
           ci-role-arn: ${{ secrets.aws-ci-role-arn }}
           env: ${{ inputs.env }}
-          artifact: www
       # Assume the formatted Role
       - name: AWS-Assume-Role
         uses: aws-actions/configure-aws-credentials@v4

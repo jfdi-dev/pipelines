@@ -18,7 +18,6 @@ jobs:
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
-      #deployment-role: ???
       module: deployment-role
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
@@ -32,23 +31,6 @@ jobs:
       module: www
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-  ##
-  # Create-Deployment-Role:
-  #   uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
-  #   with:
-  #     region: ${{ inputs.region }}
-  #     env: ${{ inputs.env }}
-  #   secrets:
-  #     aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-  # Deploy-Infrastructure:
-  #   needs: Create-Deployment-Role
-  #   uses: jfdi-dev/pipelines/.github/workflows/deploy-infrastructure.yml@main
-  #   with:
-  #     region: ${{ inputs.region }}
-  #     env: ${{ inputs.env }}
-  #     deployment-role: ${{ needs.Create-Deployment-Role.outputs.deployment-role-arn }}
-  #   secrets:
-  #     aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Sync-Files:
     needs:
       - Create-Deployment-Role

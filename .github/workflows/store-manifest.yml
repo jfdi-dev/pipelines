@@ -28,13 +28,13 @@ jobs:
       # Merge will fail if one of the files does not exist, so create empty manifests if necessary
       - name: Ensure-Manifests-Exist
         run: |
-          touch ${{ format('iac/modules/root/{0}', inputs.module) }}
+          touch ${{ format('iac/modules/root/{0}/manifest.yml', inputs.module) }}
           touch 'repo/manifest.yml'
         shell: bash
       - name: Merge-Manifests
         if: ${{ hashFiles('repo/manifest.yml') != '' }}
         run: |
-          yq '. *+ load("${{ format('iac/modules/root/{0}', inputs.module) }}")' repo/manifest.yml > manifest.yml
+          yq '. *+ load("${{ format('iac/modules/root/{0}/manifest.yml', inputs.module) }}")' repo/manifest.yml > manifest.yml
         shell: bash
       - name: Save-Manifest
         id: save-manifest

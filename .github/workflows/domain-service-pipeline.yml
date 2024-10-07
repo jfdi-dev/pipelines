@@ -28,7 +28,7 @@ jobs:
       - name: Fettle-With-Manfest
         id: fettle-with-manifest
         run: |
-          STATIC_PATHS=$(yq '[.service.statics[].path]' ./manifest.yml -o=json -I0)
+          STATIC_PATHS=$(yq '[.service.statics[].src]' ./manifest.yml -o=json -I0)
           echo "static-paths=$STATIC_PATHS" >> $GITHUB_OUTPUT
         shell: bash
   Build-Static-Site:

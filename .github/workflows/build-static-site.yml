@@ -1,6 +1,11 @@
 name: Build Static Site
 on:
   workflow_call:
+    inputs:
+      path:
+        type: string
+        required: false
+        default: ""
 
 jobs:
   Build-Static-Site:
@@ -11,12 +16,13 @@ jobs:
       - name: NPM-Build
         uses: jfdi-dev/pipelines/.github/actions/npm-build@main
       - name: Show-Dist
+        working-directory: ${{ inputs.path }}
         run: ls -laR .dist/
         shell: bash
       - name: Save-Static-Files
         uses: actions/upload-artifact@v4
         with:
           name: static-site
-          path: .dist/
+          path: ${{ format('{0}/.dist/', inputs.path) }}
           include-hidden-files: true
           if-no-files-found: error

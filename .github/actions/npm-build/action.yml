@@ -1,9 +1,10 @@
 name: "NPM Build"
 description: "Runs npm build script"
-# inputs:
-#   env:
-#     description: "The Environment to deploy into."
-#     required: true
+inputs:
+  path:
+    description: "The path to build from."
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -15,6 +16,7 @@ runs:
       run: npm ci
       shell: bash
     - name: NPM-Build
+      working-directory: ${{ inputs.path }}
       run: npm run build
       shell: bash
     # - name: NPM-Test

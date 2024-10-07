@@ -1,0 +1,46 @@
+name: Deploy Domain Service
+on:
+  workflow_call:
+    inputs:
+      region:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+    secrets:
+      aws-ci-role-arn:
+        required: true
+
+jobs:
+  Create-Deployment-Role:
+    uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
+    with:
+      region: ${{ inputs.region }}
+      env: ${{ inputs.env }}
+      module: deployment-role
+    secrets:
+      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  Deploy-Infrastructure:
+    uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
+    needs: Create-Deployment-Role
+    with:
+      region: ${{ inputs.region }}
+      env: ${{ inputs.env }}
+      deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
+      module: domain-service
+    secrets:
+      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  # Sync-Files:
+  #   needs:
+  #     - Create-Deployment-Role
+  #     - Deploy-Infrastructure
+  #   uses: jfdi-dev/pipelines/.github/workflows/sync-files.yml@main
+  #   with:
+  #     region: ${{ inputs.region }}
+  #     env: ${{ inputs.env }}
+  #     role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
+  #     s3-bucket: ${{ fromJSON(needs.Deploy-Infrastructure.outputs.terraform-output).s3-bucket.value }}
+  #     cloudfront-distribution: ${{ fromJSON(needs.Deploy-Infrastructure.outputs.terraform-output).cloudfront-distribution.value }}
+  #   secrets:
+  #     aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}

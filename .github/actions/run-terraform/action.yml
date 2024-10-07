@@ -23,7 +23,7 @@ runs:
     - name: Setup-Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.9.3
+        terraform_version: 1.9.4
     - name: Create-Backend-Config
       working-directory: ${{ inputs.dir }}
       run: |

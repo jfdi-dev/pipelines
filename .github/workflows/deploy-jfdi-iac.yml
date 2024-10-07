@@ -19,9 +19,6 @@ on:
         description: "The name of the JFDI IAC module to be deployed."
         type: string
         required: true
-      manifest:
-        type: string
-        default: null
     secrets:
       aws-ci-role-arn:
         description: ""
@@ -49,9 +46,8 @@ jobs:
           exit 1
       - name: Download-Manifest
         uses: actions/download-artifact@v4
-        if: ${{ inputs.manifest }}
         with:
-          name: ${{ inputs.manifest }}
+          name: manifest
           path: ${{ format('modules/root/{0}', inputs.module) }}
       - name: On-AWS
         id: aws

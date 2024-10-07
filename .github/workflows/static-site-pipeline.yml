@@ -12,6 +12,8 @@ on:
 jobs:
   Store-Manifest:
     uses: jfdi-dev/pipelines/.github/workflows/store-manifest.yml@main
+    with:
+      module: www
   Build-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
   Dev-Deploy-Static-Site:
@@ -21,7 +23,6 @@ jobs:
       - Build-Static-Site
     with:
       region: ${{ inputs.region }}
-      manifest: ${{ needs.Store-Manifest.outputs.manifest }}
       env: dev
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}

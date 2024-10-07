@@ -49,6 +49,11 @@ jobs:
         with:
           name: manifest
           path: ${{ format('modules/root/{0}', inputs.module) }}
+      - name: Download-Static-Site
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+          path: ${{ format('modules/root/{0}', inputs.module)}}
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

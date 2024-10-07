@@ -54,6 +54,10 @@ jobs:
         with:
           name: static-site
           path: ${{ format('modules/root/{0}', inputs.module)}}
+      - name: list-dir
+        run: |
+          ls -laR .
+        shell: bash
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

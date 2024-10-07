@@ -42,6 +42,10 @@ runs:
       run: |
         echo TF_VAR_role='${{ inputs.role }}' >> $GITHUB_ENV
       shell: bash
+    - name: List-Dirs
+      run: |
+        ls -laR .
+      shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}
       run: |

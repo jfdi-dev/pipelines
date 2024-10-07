@@ -1,6 +1,10 @@
 name: Store Manifest
 on:
   workflow_call:
+    inputs:
+      module:
+        description: "The JFDI IAC module for which to prepare the manifest"
+        type: string
 
 jobs:
   Store-Manifest:

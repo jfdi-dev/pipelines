@@ -5,7 +5,7 @@ on:
       path:
         type: string
         required: false
-        default: ""
+        default: "./"
 
 jobs:
   Build-Static-Site:

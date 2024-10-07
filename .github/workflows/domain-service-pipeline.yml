@@ -14,30 +14,30 @@ jobs:
     uses: jfdi-dev/pipelines/.github/workflows/store-manifest.yml@main
     with:
       module: domain-service
-  Gather-Static-Paths:
-    runs-on: ubuntu-latest
-    outputs:
-      static-paths: ${{ steps.fettle-with-manifest.outputs.static-paths }}
-    needs:
-      - Store-Manifest
-    steps:
-      - name: Download-Manifest
-        uses: actions/download-artifact@v4
-        with:
-          name: manifest
-      - name: Fettle-With-Manfest
-        id: fettle-with-manifest
-        run: |
-          STATIC_PATHS=$(yq '[.service.statics[].src]' ./manifest.yml -o=json -I0)
-          echo "static-paths=$STATIC_PATHS" >> $GITHUB_OUTPUT
-        shell: bash
+  # Gather-Static-Paths:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     static-paths: ${{ steps.fettle-with-manifest.outputs.static-paths }}
+  #   needs:
+  #     - Store-Manifest
+  #   steps:
+  #     - name: Download-Manifest
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: manifest
+  #     - name: Fettle-With-Manfest
+  #       id: fettle-with-manifest
+  #       run: |
+  #         STATIC_PATHS=$(yq '[.service.statics[].src]' ./manifest.yml -o=json -I0)
+  #         echo "static-paths=$STATIC_PATHS" >> $GITHUB_OUTPUT
+  #       shell: bash
   Build-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
-    needs:
-      - Gather-Static-Paths
-    strategy:
-      matrix:
-        path: ${{ fromJson(needs.Gather-Static-Paths.outputs.static-paths) }}
+    # needs:
+    #   - Gather-Static-Paths
+    # strategy:
+    #   matrix:
+    #     path: ${{ fromJson(needs.Gather-Static-Paths.outputs.static-paths) }}
   Dev-Deploy-Domain-Service:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-domain-service.yml@main
     needs:

@@ -30,6 +30,7 @@ on:
 
 jobs:
   Deploy-JFDI-IAC:
+    name: Deploy-JFDI-Module (${{ inputs.module }})
     runs-on: ubuntu-latest
     outputs:
       terraform-output: ${{ steps.run-terraform.outputs.terraform-output }}
@@ -54,10 +55,6 @@ jobs:
         with:
           name: static-site
           path: ${{ format('modules/root/{0}', inputs.module)}}
-      - name: list-dir
-        run: |
-          ls -laR .
-        shell: bash
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

@@ -42,6 +42,29 @@ runs:
       run: |
         echo TF_VAR_role='${{ inputs.role }}' >> $GITHUB_ENV
       shell: bash
+    # Secret Context Start
+    - name: Apt-Install-AWS-CLI
+      run: |
+        sudo apt-get install awscli
+        aws --version
+        aws sts get-caller-identity
+      shell: bash
+    - name: AWS-Assume-Role
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: eu-west-2
+        role-to-assume: ${{ inputs.role }}
+        role-skip-session-tagging: true
+        role-chaining: true
+    - name: Secrets-Context
+      id: secrets-context
+      working-directory: ${{ inputs.dir }}
+      run: |
+        aws sts get-caller-identity
+        aws secretsmanager get-secret-value --secret-id context-secret-auth0 --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' >> $GITHUB_ENV
+      shell: bash
+    
+    # Secret Context End
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}
       run: |

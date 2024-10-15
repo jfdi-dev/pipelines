@@ -10,6 +10,11 @@ on:
         description: ""
         type: string
         required: true
+      env_vars:
+        description: ""
+        type: string
+        required: false
+        default: ""
       deployment-role:
         description: ""
         type: string
@@ -74,6 +79,7 @@ jobs:
         id: run-terraform
         with:
           dir: ${{ format('modules/root/{0}', inputs.module) }}
+          env_vars: ${{ inputs.env_vars }}
           artifact: ${{ inputs.module }}
           project-context: ${{ steps.aws.outputs.project-context }}
           account: ${{ steps.aws.outputs.account }}

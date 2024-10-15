@@ -8,8 +8,8 @@ runs:
   steps:
     - name: Read-Context-Secrets
       run: |
-        for name in $(echo "${{ inputs.names }}" | jq -r '.[]'); do 
-          aws secretsmanager get-secret-value --secret-id context-secret-${name} --query SecretString --output text | jq -r 'to_entries | map("""\(.key)=\(.value|tostring)""") | .[]' >> $GITHUB_ENV
+        for name in $(echo '${{ inputs.names }}' | jq -r '.[]'); do 
+          aws secretsmanager get-secret-value --secret-id context-secret-${name} --query SecretString --output text | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' >> $GITHUB_ENV
         done
       shell: bash
     

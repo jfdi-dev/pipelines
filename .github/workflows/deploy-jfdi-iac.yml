@@ -74,6 +74,20 @@ jobs:
           account-id: ${{ steps.aws.outputs.account }}
           project: ${{ fromJson(steps.aws.outputs.project-context).project }}
           artifact: iam
+      - name: Save-Auth
+        run: |
+          echo OLD_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> $GITHUB_ENV
+          echo OLD_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> $GITHUB_ENV
+          echo OLD_AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN} >> $GITHUB_ENV
+        shell: bash
+      - name: Assume-Role
+        if: ${{ format('modules/root/{0}/manifest.yml', inputs.module)  != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.deployment-role != null && inputs.deployment-role || steps.format-role-arn.outputs.role-arn }}
+          role-session-name: Temp-Auth
+          role-chaining: true
+          aws-region: ${{ inputs.region }}
       - name: Read-Manifest
         id: read-manifest
         if: ${{ format('modules/root/{0}/manifest.yml', inputs.module)  != '' }}
@@ -81,19 +95,18 @@ jobs:
         run: |
           secrets=$(cat ./modules/root/${{ inputs.module }}/manifest.yml | yq .secrets -o json | jq . -c)
           echo "secrets=${secrets}" >> $GITHUB_OUTPUT
-      # - name: Assume-Role
-      #   if: ${{ steps.read-manifest.outputs.secrets != '' }}
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     role-to-assume: ${{ inputs.role }}
-      #     role-session-name: CI-GitHub-Action
-      #     aws-region: ${{ inputs.region }}
       - name: Set-Context-Secrets
         id: set-context-secrets
         if: ${{ steps.read-manifest.outputs.secrets != '' }}
         uses: jfdi-dev/pipelines/.github/actions/set-context-secrets@main
         with:
           names: ${{ steps.read-manifest.outputs.secrets }}
+      - name: Restore-Auth
+        run: |
+          echo AWS_ACCESS_KEY_ID=${OLD_AWS_ACCESS_KEY_ID} >> $GITHUB_ENV
+          echo AWS_SECRET_ACCESS_KEY=${OLD_AWS_SECRET_ACCESS_KEY} >> $GITHUB_ENV
+          echo AWS_SESSION_TOKEN=${OLD_AWS_SESSION_TOKEN} >> $GITHUB_ENV
+        shell: bash
       - name: Run-Terraform
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform

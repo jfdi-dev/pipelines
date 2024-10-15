@@ -86,7 +86,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.deployment-role != null && inputs.deployment-role || steps.format-role-arn.outputs.role-arn }}
-          role-session-name: Temp-Auth
+          #role-session-name: Temp-Auth
           role-chaining: true
           aws-region: ${{ inputs.region }}
       - name: Read-Manifest

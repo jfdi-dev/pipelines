@@ -23,6 +23,8 @@ jobs:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Get-Context-Secrets:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
+    needs:
+      - Create-Deployment-Role
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
@@ -32,7 +34,9 @@ jobs:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Deploy-Infrastructure:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
-    needs: Create-Deployment-Role
+    needs:
+      - Get-Context-Secrets
+      - Create-Deployment-Role
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}

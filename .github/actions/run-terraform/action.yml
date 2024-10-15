@@ -5,8 +5,6 @@ inputs:
     description: "The full Project Context"
   account:
     description: "The ID of the AWS Account to deploy into"
-  env_vars:
-    description: "A bunch of kvps to splat into the env"
   role:
     description: "The ARN of the Role to assume to deploy with"
   artifact:
@@ -43,13 +41,6 @@ runs:
       working-directory: ${{ inputs.dir }}
       run: |
         echo TF_VAR_role='${{ inputs.role }}' >> $GITHUB_ENV
-      shell: bash
-    - name: Set-Ambient-Env-Vars
-      id: set-ambient-env-vars
-      working-directory: ${{ inputs.dir }}
-      if: ${{ inputs.env_vars != '' }} 
-      run: |
-        echo '${{ inputs.env_vars }}' | jq -c . | jq -r 'to_entries | .[].value | to_entries | map("\(.key=\(.value|tostring))") | .[]' >> $GITHUB_ENV
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

@@ -21,26 +21,26 @@ jobs:
       module: deployment-role
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-  Get-Context-Secrets:
-    uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
-    needs:
-      - Create-Deployment-Role
-    with:
-      region: ${{ inputs.region }}
-      env: ${{ inputs.env }}
-      deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
-      module: context-secrets
-    secrets:
-      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  # Get-Context-Secrets:
+  #   uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
+  #   needs:
+  #     - Create-Deployment-Role
+  #   with:
+  #     region: ${{ inputs.region }}
+  #     env: ${{ inputs.env }}
+  #     deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
+  #     module: context-secrets
+  #   secrets:
+  #     aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Deploy-Infrastructure:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
     needs:
-      - Get-Context-Secrets
+      # - Get-Context-Secrets
       - Create-Deployment-Role
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}
-      env_vars: ${{ fromJSON(needs.Get-Context-Secrets.outputs.terraform-output).context_secrets.value }}
+      # env_vars: ${{ fromJSON(needs.Get-Context-Secrets.outputs.terraform-output).context_secrets.value }}
       deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
       module: domain-service
     secrets:

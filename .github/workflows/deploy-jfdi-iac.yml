@@ -74,6 +74,26 @@ jobs:
           account-id: ${{ steps.aws.outputs.account }}
           project: ${{ fromJson(steps.aws.outputs.project-context).project }}
           artifact: iam
+      - name: Read-Manifest
+        id: read-manifest
+        if: ${{ hashFiles('./manifest.yml') != '' }}
+        shell: bash
+        run: |
+          secrets=$(cat ./manifest.yml | yq .secrets -o json | jq . -c)
+          echo "secrets=${secrets}" >> $GITHUB_OUTPUT
+      # - name: Assume-Role
+      #   if: ${{ steps.read-manifest.outputs.secrets != '' }}
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ inputs.role }}
+      #     role-session-name: CI-GitHub-Action
+      #     aws-region: ${{ inputs.region }}
+      - name: Set-Context-Secrets
+        id: set-context-secrets
+        if: ${{ steps.read-manifest.outputs.secrets != '' }}
+        uses: jfdi-dev/pipelines/.github/actions/set-context-secrets@main
+        with:
+          names: ${{ steps.read-manifest.outputs.secrets }}
       - name: Run-Terraform
         uses: jfdi-dev/pipelines/.github/actions/run-terraform@main
         id: run-terraform

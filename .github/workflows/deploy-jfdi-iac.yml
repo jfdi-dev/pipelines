@@ -79,7 +79,7 @@ jobs:
         if: ${{ format('modules/root/{0}/manifest.yml', inputs.module)  != '' }}
         shell: bash
         run: |
-          secrets=$(cat ./modules/root/{0}/manifest.yml | yq .secrets -o json | jq . -c)
+          secrets=$(cat ./modules/root/${{ inputs.module }}/manifest.yml | yq .secrets -o json | jq . -c)
           echo "secrets=${secrets}" >> $GITHUB_OUTPUT
       # - name: Assume-Role
       #   if: ${{ steps.read-manifest.outputs.secrets != '' }}

@@ -47,8 +47,9 @@ runs:
     - name: Set-Ambient-Env-Vars
       id: set-ambient-env-vars
       working-directory: ${{ inputs.dir }}
+      if: ${{ inputs.env_vars != '' }} 
       run: |
-        jq -r 'to_entries | .[].value | to_entries | map("\(.key=\(.value|tostring))") | .[]' >> $GITHUB_ENV
+        echo '${{ inputs.env_vars }}' | jq -r 'to_entries | .[].value | to_entries | map("\(.key=\(.value|tostring))") | .[]' >> $GITHUB_ENV
       shell: bash
     - name: Terraform-Apply
       working-directory: ${{ inputs.dir }}

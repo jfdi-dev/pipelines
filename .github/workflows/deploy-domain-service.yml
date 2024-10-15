@@ -43,6 +43,7 @@ jobs:
       # env_vars: ${{ fromJSON(needs.Get-Context-Secrets.outputs.terraform-output).context_secrets.value }}
       deployment-role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
       module: domain-service
+      context-secrets: true
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   # Sync-Files:

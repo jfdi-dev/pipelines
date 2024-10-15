@@ -59,7 +59,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: static-site
-          path: ${{ format('modules/root/{0}', inputs.module)}}
+          path: ${{ format('modules/root/{0}', inputs.module) }}
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main
@@ -76,10 +76,10 @@ jobs:
           artifact: iam
       - name: Read-Manifest
         id: read-manifest
-        if: ${{ hashFiles('./manifest.yml') != '' }}
+        if: ${{ format('modules/root/{0}/manifest.yml', inputs.module)  != '' }}
         shell: bash
         run: |
-          secrets=$(cat ./manifest.yml | yq .secrets -o json | jq . -c)
+          secrets=$(cat ./modules/root/{0}/manifest.yml | yq .secrets -o json | jq . -c)
           echo "secrets=${secrets}" >> $GITHUB_OUTPUT
       # - name: Assume-Role
       #   if: ${{ steps.read-manifest.outputs.secrets != '' }}

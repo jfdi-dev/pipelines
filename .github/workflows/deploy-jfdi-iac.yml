@@ -88,6 +88,7 @@ jobs:
           role-to-assume: ${{ inputs.deployment-role != null && inputs.deployment-role || steps.format-role-arn.outputs.role-arn }}
           #role-session-name: Temp-Auth
           role-chaining: true
+          role-skip-session-tagging: true
           aws-region: ${{ inputs.region }}
       - name: Read-Manifest
         id: read-manifest

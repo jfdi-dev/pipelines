@@ -17,7 +17,7 @@ jobs:
           MODULE_DIRS=$(echo '[' $(find . -type f -name '*\main.tf*' | sed -r 's|/[^/]+$||' | sort | uniq | sed -e 's/^\|$/"/g' | paste -d, -s -) ']' | jq -c)
           echo "module-dirs=${MODULE_DIRS}" >> $GITHUB_OUTPUT
         shell: bash
-  Build-And-Test-Modules:
+  Validate-Module:
     runs-on: ubuntu-latest
     needs:
       - Gather-Modules

@@ -16,7 +16,7 @@ runs:
     - name: Terraform-Init
       if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}
       working-directory: ${{ inputs.path }}
-      run: terraform init
+      run: terraform init -input=false
       shell: bash
     - name: Terraform-Validation
       if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}

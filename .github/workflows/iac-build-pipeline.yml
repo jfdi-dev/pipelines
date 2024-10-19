@@ -30,5 +30,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Build-Modules
         uses: jfdi-dev/pipelines/.github/actions/build-terraform-module@main
+        # Only if the main.tf really does exist
+        if: ${{ hashFiles(format('{0}/main.tf', matrix.module)) != '' }}
         with:
           path: ${{ matrix.module }}

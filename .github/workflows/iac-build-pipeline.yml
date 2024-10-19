@@ -14,7 +14,7 @@ jobs:
         id: list-directories
         run: |
           MODULE_DIRS=$(echo '[' $(find /home -not -path '*/[@.]*' -type d  -printf "\"%p\"," | sed 's/,$//') ']' | jq -c)
-          echo 'module-dirs=$MODULE_DIRS' >> $GITHUB_OUTPUT
+          echo "module-dirs=${MODULE_DIRS}" >> $GITHUB_OUTPUT
         shell: bash
   Build-And-Test-Modules:
     runs-on: ubuntu-latest

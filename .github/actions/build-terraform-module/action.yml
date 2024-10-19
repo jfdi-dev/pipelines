@@ -13,6 +13,11 @@ runs:
       if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}
       with:
         terraform_version: 1.9.4
+    - name: Terraform-Format-Check
+      if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}
+      working-directory: ${{ inputs.path }}
+      run: terraform fmt -check -diff
+      shell: bash
     - name: Terraform-Init
       if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}
       working-directory: ${{ inputs.path }}
@@ -22,11 +27,6 @@ runs:
       if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}
       working-directory: ${{ inputs.path }}
       run: terraform validate
-      shell: bash
-    - name: Terraform-Format-Check
-      if: ${{ hashFiles(format('{0}/main.tf', inputs.path)) != '' }}
-      working-directory: ${{ inputs.path }}
-      run: terraform fmt -check
       shell: bash
     # - name: Terraform-Test
     #   working-directory: ${{ inputs.path }}

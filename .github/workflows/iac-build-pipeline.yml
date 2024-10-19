@@ -23,6 +23,7 @@ jobs:
     strategy:
       matrix:
         module: ${{ fromJSON(needs.Gather-Modules.outputs.module-dirs) }}
+      fail-fast: false
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4

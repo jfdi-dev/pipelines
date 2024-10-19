@@ -14,6 +14,9 @@ jobs:
     uses: jfdi-dev/pipelines/.github/workflows/store-manifest.yml@main
     with:
       module: domain-service
+  # Ideally, we wouldn't need to build the site in order to tear it down...
+  Build-Static-Site:
+    uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
   # Gather-Static-Paths:
   #   runs-on: ubuntu-latest
   #   outputs:

@@ -48,6 +48,7 @@ jobs:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Destroy-Deployment-Role:
     uses: jfdi-dev/pipelines/.github/workflows/destroy-jfdi-iac.yml@main
+    needs: Destroy-Infrastructure
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}

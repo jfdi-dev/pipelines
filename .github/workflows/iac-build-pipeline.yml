@@ -1,13 +1,6 @@
-name: Domain Service Pipeline
+name: IAC Build Pipeline
 on:
   workflow_call:
-    inputs:
-      region:
-        required: true
-        type: string
-    secrets:
-      aws-ci-role-arn:
-        required: true
 
 jobs:
   Gather-Modules:

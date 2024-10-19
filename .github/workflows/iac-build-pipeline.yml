@@ -22,7 +22,7 @@ jobs:
       - Gather-Modules
     strategy:
       matrix:
-        module: ${{ toJSON(needs.Gather-Modules.outputs.module-dirs) }}
+        module: ${{ needs.Gather-Modules.outputs.module-dirs }}
     steps:
       - name: Build-Modules
         uses: jfdi-dev/pipelines/.github/actions/build-terraform-module@main

@@ -49,6 +49,8 @@ jobs:
   Destroy-Deployment-Role:
     needs: Deploy-Infrastructure
     uses: jfdi-dev/pipelines/.github/workflows/destroy-jfdi-iac.yml@main
+    # Remove the deployment role even if deploying infrastructure fails...
+    if: success() || failure()
     with:
       region: ${{ inputs.region }}
       env: ${{ inputs.env }}

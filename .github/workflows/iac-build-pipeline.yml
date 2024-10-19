@@ -14,7 +14,7 @@ jobs:
         id: list-directories
         # Grim line-noise to find names of directories which contain a main.tf file. ie: directories which contain terraform modules...
         run: |
-          MODULE_DIRS=$(echo '[' $(find . -type f -name '*\main.tf*' | sed -r 's|/[^/]+$||' | sort | uniq | sed -e 's/^\|$/"/g' | paste -d, -s -) ']' | jq -c)
+          MODULE_DIRS=$(echo '[' $(find . -type f -name '*\main.tf' | sed -r 's|/[^/]+$||' | sort | uniq | sed -e 's/^\|$/"/g' | paste -d, -s -) ']' | jq -c)
           echo "module-dirs=${MODULE_DIRS}" >> $GITHUB_OUTPUT
         shell: bash
   Validate-Module:

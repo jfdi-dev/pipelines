@@ -1,0 +1,24 @@
+name: Domain Service Pipeline
+on:
+  workflow_call:
+    inputs:
+      region:
+        required: true
+        type: string
+    secrets:
+      aws-ci-role-arn:
+        required: true
+
+jobs:
+  Build-And-Test-Modules:
+    runs-on: ubuntu-latest
+    steps:
+      Gather-Modules:
+        run: |
+          MODULE_DIRS=$(echo '[' $(find /home -not -path '*/[@.]*' -type d  -printf "\"%p\"," | sed 's/,$//') ']' | jq -c)
+          echo 'module-dirs=$MODULE_DIRS' >> $GITHUB_OUTPUT
+        shell: bash
+      Build-Modules:
+        uses: jfdi-dev/pipelines/.github/actions/build-terraform-module@main
+        matrix:
+          module: ${{ toJSON(steps.Gather-Modules.outputs.module-dirs) }}

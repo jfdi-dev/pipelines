@@ -1,0 +1,56 @@
+name: Domain Service Pipeline
+on:
+  workflow_call:
+    inputs:
+      region:
+        required: true
+        type: string
+    secrets:
+      aws-ci-role-arn:
+        required: true
+
+jobs:
+  Store-Manifest:
+    uses: jfdi-dev/pipelines/.github/workflows/store-manifest.yml@main
+    with:
+      module: domain-service
+  # Gather-Static-Paths:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     static-paths: ${{ steps.fettle-with-manifest.outputs.static-paths }}
+  #   needs:
+  #     - Store-Manifest
+  #   steps:
+  #     - name: Download-Manifest
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: manifest
+  #     - name: Fettle-With-Manfest
+  #       id: fettle-with-manifest
+  #       run: |
+  #         STATIC_PATHS=$(yq '[.service.statics[].src]' ./manifest.yml -o=json -I0)
+  #         echo "static-paths=$STATIC_PATHS" >> $GITHUB_OUTPUT
+  #       shell: bash
+  Dev-Destroy-Domain-Service:
+    uses: jfdi-dev/pipelines/.github/workflows/tear-down-domain-service.yml@main
+    needs:
+      - Store-Manifest
+    with:
+      region: ${{ inputs.region }}
+      env: dev
+    secrets:
+      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  # Test-Deploy-Static-Site:
+  #   uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
+  #   with:
+  #     region: ${{ inputs.region }}
+  #     env: test
+  #   secrets:
+  #     ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  # Prod-Deploy-Static-Site:
+  #   uses: jfdi-dev/pipelines/.github/workflows/create-deployment-role.yml@main
+  #   with:
+  #     region: ${{ inputs.region }}
+  #     env: prod
+  #   secrets:
+  #     ci-role-arn: ${{ secrets.aws-ci-role-arn }}

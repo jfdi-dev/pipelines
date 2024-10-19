@@ -24,6 +24,8 @@ jobs:
       matrix:
         module: ${{ fromJSON(needs.Gather-Modules.outputs.module-dirs) }}
     steps:
+      - name: Git-Clone
+        uses: actions/checkout@v4
       - name: Build-Modules
         uses: jfdi-dev/pipelines/.github/actions/build-terraform-module@main
         with:

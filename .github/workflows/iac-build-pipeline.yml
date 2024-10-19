@@ -10,15 +10,28 @@ on:
         required: true
 
 jobs:
-  Build-And-Test-Modules:
+  Gather-Modules:
     runs-on: ubuntu-latest
+    outputs:
+      module-dirs: ${{ steps.list-directories.outputs.module-dirs }}
     steps:
-      Gather-Modules:
+      - name: Git-Clone
+        uses: actions/checkout@v4
+      - name: List-Directories
+        id: list-directories
         run: |
           MODULE_DIRS=$(echo '[' $(find /home -not -path '*/[@.]*' -type d  -printf "\"%p\"," | sed 's/,$//') ']' | jq -c)
           echo 'module-dirs=$MODULE_DIRS' >> $GITHUB_OUTPUT
         shell: bash
-      Build-Modules:
+  Build-And-Test-Modules:
+    runs-on: ubuntu-latest
+    needs:
+      - Gather-Modules
+    strategy:
+      matrix:
+        module: ${{ toJSON(needs.Gather-Modules.outputs.module-dirs) }}
+    steps:
+      - name: Build-Modules
         uses: jfdi-dev/pipelines/.github/actions/build-terraform-module@main
-        matrix:
-          module: ${{ toJSON(steps.Gather-Modules.outputs.module-dirs) }}
+        with:
+          path: ${{ matrix.module }}

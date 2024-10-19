@@ -1,0 +1,116 @@
+name: Destroy JFDI IAC
+on:
+  workflow_call:
+    inputs:
+      region:
+        description: ""
+        type: string
+        required: true
+      env:
+        description: ""
+        type: string
+        required: true
+      context-secrets:
+        description: ""
+        type: boolean
+        required: false
+        default: false
+      deployment-role:
+        description: ""
+        type: string
+        required: false
+        default: null
+      module:
+        description: "The name of the JFDI IAC module to be deployed."
+        type: string
+        required: true
+    secrets:
+      aws-ci-role-arn:
+        description: ""
+        required: true
+    outputs:
+      terraform-output:
+        description: ""
+        value: ${{ jobs.Deploy-JFDI-IAC.outputs.terraform-output }}
+
+jobs:
+  Destroy-JFDI-IAC:
+    name: Destroy-JFDI-Module (${{ inputs.module }})
+    runs-on: ubuntu-latest
+    outputs:
+      terraform-output: ${{ steps.run-terraform.outputs.terraform-output }}
+    steps:
+      - name: Clone-JFDI-IAC
+        uses: actions/checkout@v4
+        with:
+          repository: jfdi-dev/iac
+      # Fail if requested module cannot be found
+      - name: Check-JFDI-Module-Exists
+        if: ${{ hashFiles(format('modules/root/{0}', inputs.module)) == '' }}
+        run:
+          echo "::error title=JFDI Module Not Found::The specified module `${{ inputs.module }}` could not be found in the `jfdi-dev/iac` repository (`modules/root/` directory)."
+          exit 1
+      - name: Download-Manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: manifest
+          path: ${{ format('modules/root/{0}', inputs.module) }}
+      - name: On-AWS
+        id: aws
+        uses: jfdi-dev/pipelines/.github/actions/on-aws@main
+        with:
+          region: ${{ inputs.region }}
+          ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+          env: ${{ inputs.env }}
+      - name: Format-Role-Arn
+        id: format-role-arn
+        uses: jfdi-dev/pipelines/.github/actions/format-deployment-role-arn@main
+        with:
+          account-id: ${{ steps.aws.outputs.account }}
+          project: ${{ fromJson(steps.aws.outputs.project-context).project }}
+          artifact: iam
+      - name: Save-Auth
+        if: ${{ inputs.context-secrets }}
+        run: |
+          echo OLD_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> $GITHUB_ENV
+          echo OLD_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> $GITHUB_ENV
+          echo OLD_AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN} >> $GITHUB_ENV
+        shell: bash
+      - name: Assume-Role
+        if: ${{ inputs.context-secrets }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.deployment-role != null && inputs.deployment-role || steps.format-role-arn.outputs.role-arn }}
+          #role-session-name: Temp-Auth
+          role-chaining: true
+          role-skip-session-tagging: true
+          aws-region: ${{ inputs.region }}
+      - name: Read-Manifest
+        id: read-manifest
+        if: ${{ inputs.context-secrets && format('modules/root/{0}/manifest.yml', inputs.module)  != '' }}
+        shell: bash
+        run: |
+          secrets=$(cat ./modules/root/${{ inputs.module }}/manifest.yml | yq .secrets -o json | jq . -c)
+          echo "secrets=${secrets}" >> $GITHUB_OUTPUT
+      - name: Set-Context-Secrets
+        id: set-context-secrets
+        if: ${{ inputs.context-secrets && steps.read-manifest.outputs.secrets != '' }}
+        uses: jfdi-dev/pipelines/.github/actions/set-context-secrets@main
+        with:
+          names: ${{ steps.read-manifest.outputs.secrets }}
+      - name: Restore-Auth
+        if: ${{ inputs.context-secrets }}
+        run: |
+          echo AWS_ACCESS_KEY_ID=${OLD_AWS_ACCESS_KEY_ID} >> $GITHUB_ENV
+          echo AWS_SECRET_ACCESS_KEY=${OLD_AWS_SECRET_ACCESS_KEY} >> $GITHUB_ENV
+          echo AWS_SESSION_TOKEN=${OLD_AWS_SESSION_TOKEN} >> $GITHUB_ENV
+        shell: bash
+      - name: Run-Terraform-Destroy
+        uses: jfdi-dev/pipelines/.github/actions/run-terraform-destroy@main
+        id: run-terraform-destroy
+        with:
+          dir: ${{ format('modules/root/{0}', inputs.module) }}
+          artifact: ${{ inputs.module }}
+          project-context: ${{ steps.aws.outputs.project-context }}
+          account: ${{ steps.aws.outputs.account }}
+          role: ${{ inputs.deployment-role != null && inputs.deployment-role || steps.format-role-arn.outputs.role-arn }}

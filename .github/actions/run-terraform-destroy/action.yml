@@ -1,0 +1,45 @@
+name: "Run Terraform Destroy"
+description: "Setup Terraform for pipeline use, tf init, tf destroy"
+inputs:
+  project-context:
+    description: "The full Project Context"
+  account:
+    description: "The ID of the AWS Account to deploy into"
+  role:
+    description: "The ARN of the Role to assume to deploy with"
+  artifact:
+    description: "The name of the artifact to deploy."
+  dir:
+    description: "The directory which contains the Terraform module to deploy."
+    required: false
+    default: ./
+runs:
+  using: "composite"
+  steps:
+    - name: Setup-Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.4
+    - name: Create-Backend-Config
+      working-directory: ${{ inputs.dir }}
+      run: |
+        echo 'bucket="${{ fromJSON(inputs.project-context).terraform.state }}"' >> ./config.s3.tfbackend
+        echo 'dynamodb_table="${{ fromJSON(inputs.project-context).terraform.locks }}"' >> ./config.s3.tfbackend
+        echo 'key="${{ inputs.account }}/${{ github.repository }}/${{ inputs.artifact }}"' >> ./config.s3.tfbackend
+      shell: bash
+    - name: Terraform-Init
+      working-directory: ${{ inputs.dir }}
+      run: |
+        terraform init -input=false -backend-config=./config.s3.tfbackend
+      shell: bash
+    - name: Create-Context-Config
+      id: create-context-config
+      working-directory: ${{ inputs.dir }}
+      run: |
+        echo TF_VAR_role='${{ inputs.role }}' >> $GITHUB_ENV
+      shell: bash
+    - name: Terraform-Destroy
+      working-directory: ${{ inputs.dir }}
+      run: |
+        terraform apply -destroy -input=false -auto-approve
+      shell: bash

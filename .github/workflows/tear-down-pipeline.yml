@@ -1,4 +1,4 @@
-name: Deploy Domain Service
+name: Tear Down
 on:
   workflow_call:
     inputs:
@@ -32,8 +32,8 @@ jobs:
   #     module: context-secrets
   #   secrets:
   #     aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-  Deploy-Infrastructure:
-    uses: jfdi-dev/pipelines/.github/workflows/deploy-jfdi-iac.yml@main
+  Destroy-Infrastructure:
+    uses: jfdi-dev/pipelines/.github/workflows/destroy-jfdi-iac.yml@main
     needs:
       # - Get-Context-Secrets
       - Create-Deployment-Role

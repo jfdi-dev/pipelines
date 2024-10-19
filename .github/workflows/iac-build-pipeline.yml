@@ -13,7 +13,7 @@ jobs:
       - name: List-Directories
         id: list-directories
         run: |
-          MODULE_DIRS=$(echo '[' $(find /home -not -path '*/[@.]*' -type d  -printf "\"%p\"," | sed 's/,$//') ']' | jq -c)
+          MODULE_DIRS=$(echo '[' $(find . -not -path '*/[@.]*' -type d  -printf "\"%p\"," | sed 's/,$//') ']' | jq -c)
           echo "module-dirs=${MODULE_DIRS}" >> $GITHUB_OUTPUT
         shell: bash
   Build-And-Test-Modules:
@@ -22,7 +22,7 @@ jobs:
       - Gather-Modules
     strategy:
       matrix:
-        module: ${{ needs.Gather-Modules.outputs.module-dirs }}
+        module: ${{ fromJSON(needs.Gather-Modules.outputs.module-dirs) }}
     steps:
       - name: Build-Modules
         uses: jfdi-dev/pipelines/.github/actions/build-terraform-module@main

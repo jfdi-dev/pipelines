@@ -41,6 +41,10 @@ jobs:
     # strategy:
     #   matrix:
     #     path: ${{ fromJson(needs.Gather-Static-Paths.outputs.static-paths) }}
+  Build-API:
+    uses: jfdi-dev/pipelines/.github/workflows/build-api.yml@main
+    with:
+      path: api/
   Dev-Deploy-Domain-Service:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-domain-service.yml@main
     needs:

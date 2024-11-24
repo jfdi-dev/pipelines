@@ -63,7 +63,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: static-site
-          path: ${{ format('modules/root/{0}', inputs.module) }}
+          path: ${{ format('modules/root/{0}/ui', inputs.module) }}
+      - name: Download-API
+        uses: actions/download-artifact@v4
+        with:
+          name: api
+          path: ${{ format('modules/root/{0}/api', inputs.module) }}
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

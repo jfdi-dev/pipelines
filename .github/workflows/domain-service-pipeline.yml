@@ -50,6 +50,7 @@ jobs:
     needs:
       - Store-Manifest
       - Build-Static-Site
+      - Build-API
     with:
       # This path really needs to come from manifest...
       path: api/

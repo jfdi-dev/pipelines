@@ -33,6 +33,9 @@ jobs:
   #       shell: bash
   Build-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
+    with:
+      # This path really needs to come from manifest...
+      path: ui/
     # needs:
     #   - Gather-Static-Paths
     # strategy:
@@ -44,6 +47,8 @@ jobs:
       - Store-Manifest
       - Build-Static-Site
     with:
+      # This path really needs to come from manifest...
+      path: api/
       region: ${{ inputs.region }}
       env: dev
     secrets:

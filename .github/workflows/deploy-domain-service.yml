@@ -50,17 +50,6 @@ jobs:
       context-secrets: true
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
-  Destroy-Deployment-Role:
-    needs: Deploy-Infrastructure
-    uses: jfdi-dev/pipelines/.github/workflows/destroy-jfdi-iac.yml@main
-    # Remove the deployment role even if deploying infrastructure fails...
-    if: success() || failure()
-    with:
-      region: ${{ inputs.region }}
-      env: ${{ inputs.env }}
-      module: deployment-role
-    secrets:
-      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
   Sync-Files:
     needs:
       - Create-Deployment-Role
@@ -72,5 +61,16 @@ jobs:
       role: ${{ fromJSON(needs.Create-Deployment-Role.outputs.terraform-output).role_arn.value }}
       s3-bucket: ${{ fromJSON(needs.Deploy-Infrastructure.outputs.terraform-output).s3-bucket.value }}
       cloudfront-distribution: ${{ fromJSON(needs.Deploy-Infrastructure.outputs.terraform-output).cloudfront-distribution.value }}
+    secrets:
+      aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}
+  Destroy-Deployment-Role:
+    needs: Sync-Files
+    uses: jfdi-dev/pipelines/.github/workflows/destroy-jfdi-iac.yml@main
+    # Remove the deployment role even if deploying infrastructure fails...
+    if: success() || failure()
+    with:
+      region: ${{ inputs.region }}
+      env: ${{ inputs.env }}
+      module: deployment-role
     secrets:
       aws-ci-role-arn: ${{ secrets.aws-ci-role-arn }}

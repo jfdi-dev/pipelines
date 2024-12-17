@@ -28,7 +28,7 @@ jobs:
       - name: Save-Static-Files
         uses: actions/upload-artifact@v4
         with:
-          name: static-site
+          name: ui
           path: ${{ format('{0}/{1}', inputs.path, inputs.dir) }}
           include-hidden-files: true
           if-no-files-found: error

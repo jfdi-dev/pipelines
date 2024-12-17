@@ -54,21 +54,14 @@ jobs:
         run:
           echo "::error title=JFDI Module Not Found::The specified module `${{ inputs.module }}` could not be found in the `jfdi-dev/iac` repository (`modules/root/` directory)."
           exit 1
-      - name: Download-Manifest
+      - name: Download-Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: manifest
           path: ${{ format('modules/root/{0}', inputs.module) }}
-      - name: Download-Static-Site
-        uses: actions/download-artifact@v4
-        with:
-          name: static-site
-          path: ${{ format('modules/root/{0}/ui', inputs.module) }}
-      - name: Download-API
-        uses: actions/download-artifact@v4
-        with:
-          name: api
-          path: ${{ format('modules/root/{0}/api', inputs.module) }}
+      - name: Copy-Manifest
+        run: cp ./manifest/manifest.yml ./manifest.yml
+        working-directory: ${{ format('modules/root/{0}', inputs.module) }}
+        shell: bash
       - name: On-AWS
         id: aws
         uses: jfdi-dev/pipelines/.github/actions/on-aws@main

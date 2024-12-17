@@ -5,6 +5,10 @@ on:
       region:
         required: true
         type: string
+      dir:
+        required: false
+        type: string
+        default: ".dist/"
     secrets:
       aws-ci-role-arn:
         required: true
@@ -16,6 +20,8 @@ jobs:
       module: www
   Build-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/build-static-site.yml@main
+    with:
+      dir: ${{ inputs.dir }}
   Dev-Deploy-Static-Site:
     uses: jfdi-dev/pipelines/.github/workflows/deploy-static-site.yml@main
     needs:

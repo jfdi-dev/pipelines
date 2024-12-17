@@ -6,6 +6,10 @@ on:
         type: string
         required: false
         default: "./"
+      dir:
+        type: string
+        required: false
+        default: ".dist/"
 
 jobs:
   Build-Static-Site:
@@ -19,12 +23,12 @@ jobs:
           path: ${{ inputs.path }}
       - name: Show-Dist
         working-directory: ${{ inputs.path }}
-        run: ls -laR .dist/
+        run: ls -laR ${{ inputs.dir }}
         shell: bash
       - name: Save-Static-Files
         uses: actions/upload-artifact@v4
         with:
           name: static-site
-          path: ${{ format('{0}/.dist/', inputs.path) }}
+          path: ${{ format('{0}/{1}', inputs.path, inputs.dir) }}
           include-hidden-files: true
           if-no-files-found: error

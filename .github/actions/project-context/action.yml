@@ -26,9 +26,8 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Apt-Install-AWS-CLI
+    - name: Check-AWS-CLI
       run: |
-        sudo apt-get install awscli
         aws --version
         aws sts get-caller-identity
       shell: bash

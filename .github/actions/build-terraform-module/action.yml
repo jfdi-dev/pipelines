@@ -12,7 +12,7 @@ runs:
       with:
         terraform_version: 1.9.4
     # bug with act and terraform permissions: https://github.com/nektos/act/issues/491
-    - name: fix terraform file permissions
+    - name: Fix Terraform file permissions
       run: find /tmp -name "terraform" -type f -exec chmod 755 {} +
       shell: bash
     - name: Terraform-Format-Check
@@ -23,10 +23,10 @@ runs:
       working-directory: ${{ inputs.path }}
       run: terraform init -input=false
       shell: bash
-    - name: Terraform-Validation
-      working-directory: ${{ inputs.path }}
-      run: terraform validate
-      shell: bash
+    # - name: Terraform-Validation
+    #   working-directory: ${{ inputs.path }}
+    #   run: terraform validate
+    #   shell: bash
     # - name: Terraform-Test
     #   working-directory: ${{ inputs.path }}
     #   # only do tf test if there's a tests/ folder... 

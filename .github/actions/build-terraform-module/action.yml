@@ -11,6 +11,10 @@ runs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.9.4
+    # bug with act and terraform permissions: https://github.com/nektos/act/issues/491
+    - name: fix terraform file permissions
+      run: find /tmp -name "terraform" -type f -exec chmod 755 {} +
+      shell: bash
     - name: Terraform-Format-Check
       working-directory: ${{ inputs.path }}
       run: terraform fmt -check -diff

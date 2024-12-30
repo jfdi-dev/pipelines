@@ -21,7 +21,7 @@ runs:
       shell: bash
     - name: Terraform-Init
       working-directory: ${{ inputs.path }}
-      run: terraform init -input=false
+      run: terraform init -input=false -backend=false
       shell: bash
     # - name: Terraform-Validation
     #   working-directory: ${{ inputs.path }}

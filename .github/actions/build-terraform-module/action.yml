@@ -25,14 +25,14 @@ runs:
       run: terraform init -input=false -backend=false
       shell: bash
     - name: Terraform-Validation
-      if: ${{ hashFiles(format('{0}/validate', inputs.module)) != '' }}
       working-directory: ${{ inputs.path }}
+      if: ${{ hashFiles('./validate') != '' }}
       run: terraform validate
       shell: bash
-    # - name: Terraform-Test
-    #   working-directory: ${{ inputs.path }}
-    #   # only do tf test if there's a tests/ folder... 
-    #   if: ${{ hashFiles('./tests') != '' }}
-    #   run: terraform test
-    #   shell: bash
+    - name: Terraform-Test
+      working-directory: ${{ inputs.path }}
+      # only do tf test if there's a tests/ folder... 
+      if: ${{ hashFiles('./tests') != '' }}
+      run: terraform test
+      shell: bash
 

@@ -32,7 +32,7 @@ runs:
     - name: Terraform-Test
       working-directory: ${{ inputs.path }}
       # only do tf test if there's a tests/ folder... 
-      if: ${{ hashFiles('./tests') != '' }}
+      if: ${{ hashFiles(format('{0}/tests', inputs.path)) != '' }}
       run: terraform test
       shell: bash
 

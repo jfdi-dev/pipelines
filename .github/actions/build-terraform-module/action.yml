@@ -25,7 +25,7 @@ runs:
       run: terraform init -input=false -backend=false
       shell: bash
     - name: Terraform-Validation
-      if: ${{ hashFiles(format('{0}/validate', inputs.module)) == '' }}
+      if: ${{ hashFiles(format('{0}/validate', inputs.module)) != '' }}
       working-directory: ${{ inputs.path }}
       run: terraform validate
       shell: bash

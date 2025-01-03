@@ -35,6 +35,7 @@ jobs:
         if: ${{ hashFiles('repo/manifest.yml') != '' }}
         run: |
           yq '. *+ load("${{ format('iac/modules/root/{0}/manifest.yml', inputs.module) }}")' repo/manifest.yml > manifest.yml
+          cat repo/manifest.yml
         shell: bash
       - name: Save-Manifest
         id: save-manifest

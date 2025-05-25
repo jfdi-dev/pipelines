@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: NPM-Build
         uses: jfdi-dev/pipelines/.github/actions/npm-build@main
         with:

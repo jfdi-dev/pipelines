@@ -111,7 +111,7 @@ jobs:
       - name: Auth0-Context
         id: auth0-context
         if: ${{ env.AUTH0_DOMAIN != '' && env.AUTH0_CLIENT_ID != '' && env.AUTH0_CLIENT_SECRET != '' }}
-        uses: Kajatin/auth0-login@v1
+        uses: Kajatin/auth0-login@v1.0.2
         with:
           tenant-url: https://${{ env.AUTH0_DOMAIN }}
           client-id: env.AUTH0_CLIENT_ID

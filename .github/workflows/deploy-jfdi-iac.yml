@@ -27,7 +27,7 @@ on:
       path:
         type: string
         required: false
-        default: './'
+        default: "./"
     secrets:
       aws-ci-role-arn:
         description: ""
@@ -105,6 +105,26 @@ jobs:
         uses: jfdi-dev/pipelines/.github/actions/set-context-secrets@main
         with:
           names: ${{ steps.read-manifest.outputs.secrets }}
+      #
+      # Auth0 Login + Access Token
+      #
+      - name: Auth0-Context
+        id: auth0-context
+        if: ${{ env.AUTH0_DOMAIN != '' && env.AUTH0_CLIENT_ID != '' && env.AUTH0_CLIENT_SECRET != '' }}
+        uses: Kajatin/auth0-login@v1
+        with:
+          tenant-url: https://${{ env.AUTH0_DOMAIN }}
+          client-id: env.AUTH0_CLIENT_ID
+          client-secret: env.AUTH0_CLIEN_SECRET
+      - name: Auth0-Context-Env
+        id: auth0-context-env
+        if: ${{ steps.auth0-context.outputs.access-token != '' }}
+        run: |
+          echo AUTH0_API_TOKEN=${{ steps.auth0-context.outputs.access-token }} >> $GITHUB_ENV
+        shell: bash
+      #
+      # END: Auth0 Login + Access Token
+      #
       - name: Restore-Auth
         if: ${{ inputs.context-secrets }}
         run: |

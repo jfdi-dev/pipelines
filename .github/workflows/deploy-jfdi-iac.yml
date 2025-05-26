@@ -110,12 +110,12 @@ jobs:
       #
       - name: Auth0-Context
         id: auth0-context
-        if: ${{ env.AUTH0_DOMAIN != '' && env.AUTH0_CLIENT_ID != '' && env.AUTH0_CLIENT_SECRET != '' }}
+        if: ${{ env.AUTH0_DOMAIN != '' && env.AUTH0_JFDI_CLIENT_ID != '' && env.AUTH0_JFDI_CLIENT_SECRET != '' }}
         uses: Kajatin/auth0-login@v1.0.2
         with:
           tenant-url: https://${{ env.AUTH0_DOMAIN }}
-          client-id: ${{ env.AUTH0_CLIENT_ID }}
-          client-secret: ${{ env.AUTH0_CLIENT_SECRET }}
+          client-id: ${{ env.AUTH0_JFDI_CLIENT_ID }}
+          client-secret: ${{ env.AUTH0_JFDI_CLIENT_SECRET }}
           audience: https://${{ env.AUTH0_DOMAIN }}/api/v2/
       - name: Auth0-Context-Env
         id: auth0-context-env

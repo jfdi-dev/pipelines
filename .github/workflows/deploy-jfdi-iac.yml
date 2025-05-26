@@ -116,6 +116,7 @@ jobs:
           tenant-url: https://${{ env.AUTH0_DOMAIN }}
           client-id: ${{ env.AUTH0_CLIENT_ID }}
           client-secret: ${{ env.AUTH0_CLIENT_SECRET }}
+          audience: https://${{ env.AUTH0_DOMAIN }}/api/v2/
       - name: Auth0-Context-Env
         id: auth0-context-env
         if: ${{ steps.auth0-context.outputs.access-token != '' }}

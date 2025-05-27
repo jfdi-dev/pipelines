@@ -1,0 +1,3 @@
+# Run Terraform Destroy
+
+Lorem ipsum dolor sit amet...

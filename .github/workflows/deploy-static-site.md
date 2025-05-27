@@ -1,0 +1,3 @@
+# Deploy Static Site
+
+Lorem ipsum dolor sit amet...

@@ -1,0 +1,39 @@
+name: NPM Package
+on:
+  workflow_call:
+    inputs:
+      dir:
+        description: The working directory for the build
+        type: string
+        required: false
+        default: .
+    outputs:
+      PackageName:
+        description: The name of the tarball file which contains the NPM package
+        value: ${{ jobs.Package.outputs.PackageName }}
+
+jobs:
+  Build:
+    uses: ./.github/workflows/npm-build.yml
+    with:
+      dir: ${{ inputs.dir }}
+  Package:
+    needs: [Build]
+    runs-on: ubuntu-latest
+    outputs:
+      PackageName: ${{ steps.pack.outputs.PACKAGE_NAME }}
+    steps:
+      - name: Load Build Output
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+      - name: Pack
+        id: pack
+        run: |
+          echo "PACKAGE_NAME=`npm pack | tail -n 1`" >> "$GITHUB_OUTPUT"
+      - name: Save Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: ./${{ steps.pack.outputs.PACKAGE_NAME }}
+          compression-level: 0

@@ -1,0 +1,8 @@
+name: Test NPM Publish - No Token
+on: [push]
+
+jobs:
+  NPM-Publish:
+    uses: ./.github/workflows/npm-publish.yml
+    with:
+      dir: ./tests/fixtures/npm/ok

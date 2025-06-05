@@ -1,0 +1,3 @@
+.github/.artifacts/
+.localstack/
+node_modules/

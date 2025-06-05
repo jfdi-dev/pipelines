@@ -1,0 +1,8 @@
+name: Test NPM Package - OK
+on: [push]
+
+jobs:
+  NPM-Package:
+    uses: ./.github/workflows/npm-package.yml
+    with:
+      dir: ./tests/fixtures/npm/ok

@@ -8,10 +8,10 @@ outputs:
   # account-id:
   #   description: "The ID of the AWS Account that corresponds to the account name input"
   #   value: ${{ steps.lookup-account-id.outputs.account-id }}
-  project-context: 
+  project-context:
     description: "The full Project Context"
     value: ${{ steps.get-project-context.outputs.project-context }}
-  tooling-account: 
+  tooling-account:
     description: "The ID of the Tooling Account"
     value: ${{ steps.get-project-context.outputs.tooling-account }}
   account:

@@ -1,0 +1,8 @@
+name: Test NPM Build - No Build Output
+on: [push]
+
+jobs:
+  NPM-Build:
+    uses: ./.github/workflows/npm-build.yml
+    with:
+      dir: ./tests/fixtures/npm/no-build-output

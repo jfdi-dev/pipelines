@@ -1,0 +1,49 @@
+name: NPM Build
+on:
+  workflow_call:
+    inputs:
+      dir:
+        description: The working directory for the build
+        type: string
+        required: false
+        default: .
+
+jobs:
+  Build:
+    defaults:
+      run:
+        working-directory: ${{ inputs.dir }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git-Clone
+        uses: actions/checkout@v4
+      - name: NPM-CI
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm run test
+      - name: SBOM
+        run: npm sbom --sbom-format spdx > sbom.json
+      - name: Save Build Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          if-no-files-found: error
+          path: |
+            ${{inputs.dir}}/dist/
+            ${{inputs.dir}}/package.json
+      - name: Save Coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage
+          if-no-files-found: error
+          path: ${{inputs.dir}}/coverage/
+      - name: Save SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          if-no-files-found: error
+          path: ${{inputs.dir}}/sbom.json

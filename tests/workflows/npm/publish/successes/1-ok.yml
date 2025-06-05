@@ -1,0 +1,11 @@
+name: Test NPM Publish - OK
+on: [push]
+
+jobs:
+  NPM-Publish:
+    uses: ./.github/workflows/npm-publish.yml
+    with:
+      dir: ./tests/fixtures/npm/ok
+      registry: http://host.docker.internal:8888/
+    secrets:
+      token: FAKE_TOKEN

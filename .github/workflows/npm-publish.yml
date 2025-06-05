@@ -1,0 +1,42 @@
+name: NPM Publish
+on:
+  workflow_call:
+    inputs:
+      dir:
+        description: The working directory for the build
+        type: string
+        required: false
+        default: .
+      restricted:
+        description: True to make the package restricted/private (default=false)
+        required: false
+        type: boolean
+        default: false
+      registry:
+        description: The URL of the npm registry to publish to
+        type: string
+        required: false
+    secrets:
+      token:
+        required: true
+
+jobs:
+  Package:
+    uses: ./.github/workflows/npm-package.yml
+    with:
+      dir: ${{ inputs.dir }}
+  Publish:
+    needs: [Package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Package
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+      - name: Publish NPM
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          package: ${{ needs.Package.outputs.PackageName }}
+          token: ${{ secrets.token }}
+          access: ${{ inputs.restricted && 'restricted' || 'public' }}
+          registry: ${{ inputs.registry }}

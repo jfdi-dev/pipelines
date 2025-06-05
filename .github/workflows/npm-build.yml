@@ -7,6 +7,9 @@ on:
         type: string
         required: false
         default: .
+    secrets:
+      npm_token:
+        required: false
 
 jobs:
   Build:
@@ -17,6 +20,13 @@ jobs:
     steps:
       - name: Git-Clone
         uses: actions/checkout@v4
+      - name: Enable Private NPM Registry Access
+        uses: dkershner6/use-npm-token-action@v2
+        env:
+          npm_token: ${{ secrets.npm_token }}
+        if: ${{ env.npm_token != '' }}
+        with:
+          token: "${{ secrets.NPM_TOKEN }}"
       - name: NPM-CI
         run: npm ci
       - name: Lint
